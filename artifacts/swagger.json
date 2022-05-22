@@ -1,0 +1,108 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "JGRMQAPI",
+    "version" : "1.0.0",
+    "description" : "JGRMQAPI"
+  },
+  "paths" : {
+    "/contacts" : {
+      "post" : {
+        "operationId" : "postContacts",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "$ref" : "#/definitions/jgr-out-msg"
+            }
+          }
+        },
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "description" : "Insert a contacts",
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/jgr-in-msg"
+          },
+          "description" : "The request body for the operation",
+          "required" : true
+        } ]
+      }
+    }
+  },
+  "basePath" : "/jgrmqapi/v1",
+  "definitions" : {
+    "jgr-metadafa" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        }
+      }
+    },
+    "jgr-data" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "fname" : {
+          "type" : "string"
+        },
+        "lname" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "company" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        }
+      }
+    },
+    "jgr-response" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "msg" : {
+          "type" : "string"
+        },
+        "time" : {
+          "type" : "string"
+        }
+      }
+    },
+    "jgr-in-msg" : {
+      "type" : "object",
+      "properties" : {
+        "metadata" : {
+          "$ref" : "#/definitions/jgr-metadafa"
+        },
+        "payload" : {
+          "$ref" : "#/definitions/jgr-data"
+        }
+      }
+    },
+    "jgr-out-msg" : {
+      "type" : "object",
+      "properties" : {
+        "response" : {
+          "$ref" : "#/definitions/jgr-response"
+        },
+        "payload" : {
+          "$ref" : "#/definitions/jgr-data"
+        }
+      }
+    }
+  }
+}
