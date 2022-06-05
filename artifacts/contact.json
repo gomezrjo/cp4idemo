@@ -1,0 +1,36 @@
+{
+  "$id": "https://cp4i.ibm.com/contact.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Contact",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The contacts's id."
+    },
+    "fname": {
+      "type": "string",
+      "description": "The contacts's first name."
+    },
+    "lname": {
+      "type": "string",
+      "description": "The contact's last name."
+    },
+    "email": {
+      "type": "string",
+      "description": "The contact's email."
+    },
+    "phone": {
+      "type": "string",
+      "description": "The contact's phone number."
+    },
+    "company": {
+      "type": "string",
+      "description": "The contact's company."
+    },
+    "comments": {
+      "type": "string",
+      "description": "Extra comments."
+    }
+  }
+}
