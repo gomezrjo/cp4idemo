@@ -2,7 +2,7 @@
 
 This Repo contains multiple App Connect assets (a.k.a. BAR files) to be used as part of an end-to-end CP4I demonstration.
 
-* **SFLeads** is an Integration developed using the Designer Authoring Tool showcasing the SalesForce Smart Connector. This is how the flow looks like:
+* **SFLeads** is an Integration developed using the Designer Authoring Tool showcasing the SalesForce Smart Connector. The flow can be found [here](https://github.com/gomezrjo/cp4idemo/blob/main/artifacts/SFLeads.yaml). This is how the flow looks like:
 
 ![ACE Integrations Image 0](images/SFLeads-Flow.png)
 
