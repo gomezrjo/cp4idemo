@@ -16,4 +16,4 @@ This Repo contains multiple App Connect assets (a.k.a. BAR files) to be used as 
 
 * **SFLeads** is an Integration developed using the Designer Authoring Tool showcasing the SalesForce Smart Connector. This is how the flow looks like:
 
-![ACE Integrations Image 3](images/SFLead-Flow.png)
+![ACE Integrations Image 3](images/SFLeads-Flow.png)
