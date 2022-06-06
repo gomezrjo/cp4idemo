@@ -1,0 +1,233 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        createLead:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: lead
+          output-context:
+            data: lead
+        retrieveLead:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-2'
+          input-context:
+            data: lead
+          output-context:
+            data: lead
+      options:
+        resources:
+          - business-object: lead
+            model:
+              $ref: '#/models/lead'
+            triggers:
+              create: createLead
+              retrieve: retrieveLead
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: Lead
+      connector-type: salesforce
+      account-name: JGRSFAcct
+      actions:
+        CREATE: {}
+    action-interface-2:
+      type: api-action
+      business-object: Lead
+      connector-type: salesforce
+      account-name: JGRSFAcct
+      actions:
+        RETRIEVEALL: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - create-action:
+              name: Salesforce Create lead
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              map:
+                mappings:
+                  - Company:
+                      template: '{{$Request.company}}'
+                  - Description:
+                      template: '{{$Request.comments}}'
+                  - Email:
+                      template: '{{$Request.email}}'
+                  - FirstName:
+                      template: '{{$Request.fname}}'
+                  - LastName:
+                      template: '{{$Request.lname}}'
+                  - Phone:
+                      template: '{{$Request.phone}}'
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - response:
+              name: response-1
+              reply-maps:
+                - title: lead successfully created
+                  status-code: 201
+                  map:
+                    mappings:
+                      - comments:
+                          template: '{{$Request.comments}}'
+                      - company:
+                          template: '{{$Request.company}}'
+                      - email:
+                          template: '{{$Request.email}}'
+                      - fname:
+                          template: '{{$Request.fname}}'
+                      - id:
+                          template: '{{$SalesforceCreatelead.Id}}'
+                      - lname:
+                          template: '{{$Request.lname}}'
+                      - phone:
+                          template: '{{$Request.phone}}'
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: SalesforceCreatelead
+                        $ref: '#/node-output/Salesforce Create lead/response/payload'
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                  input: []
+    assembly-2:
+      assembly:
+        execute:
+          - retrieve-action:
+              name: Salesforce Retrieve leads
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              filter:
+                where:
+                  Id: '{{$api.id}}'
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                limit: 1
+              allow-truncation: true
+              pagination-type: TOKEN
+              allow-empty-output: true
+          - response:
+              name: response-1
+              reply-maps:
+                - title: lead successfully retrieved
+                  status-code: 200
+                  map:
+                    mappings:
+                      - comments:
+                          template: '{{$SalesforceRetrieveleads.Description}}'
+                      - company:
+                          template: '{{$SalesforceRetrieveleads.Company}}'
+                      - email:
+                          template: '{{$SalesforceRetrieveleads.Email}}'
+                      - fname:
+                          template: '{{$SalesforceRetrieveleads.FirstName}}'
+                      - id:
+                          template: '{{$api.id}}'
+                      - lname:
+                          template: '{{$SalesforceRetrieveleads.LastName}}'
+                      - phone:
+                          template: '{{$SalesforceRetrieveleads.Phone}}'
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: api
+                        $ref: '#/trigger/api/parameters'
+                      - variable: SalesforceRetrieveleads
+                        $ref: >-
+                          #/node-output/Salesforce Retrieve
+                          leads/response/payload
+                      - variable: SalesforceRetrieveleadsMetadata
+                        $ref: '#/node-output/Salesforce Retrieve leads/response'
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                  input: []
+  name: SFLeads
+models:
+  lead:
+    name: lead
+    properties:
+      id:
+        required: false
+        id: true
+        type: string
+      fname:
+        required: false
+        id: false
+        type: string
+      lname:
+        required: false
+        id: false
+        type: string
+      email:
+        required: false
+        id: false
+        type: string
+      phone:
+        required: false
+        id: false
+        type: string
+      company:
+        required: false
+        id: false
+        type: string
+      comments:
+        required: false
+        id: false
+        type: string
+    plural: lead
+    description: ' '
+    operations:
+      create: '#/integration/assemblies/assembly-1'
+      retrieve: '#/integration/assemblies/assembly-2'
+x-ibm-configuration:
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          title: Invoke flow
+          version: 2.0.0
+          verb: keep
+          target-url: $(app-connect-designer-url)$(request.path)
+          follow-redirects: false
+          timeout: 60
+          parameter-control:
+            type: blacklist
+          header-control:
+            type: blacklist
+          inject-proxy-headers: true
+          username: $(app-connect-designer-username)
+          password: $(app-connect-designer-password)
+  properties:
+    app-connect-designer-url:
+      description: The URL of the App Connect Designer API endpoint.
+      encoded: false
+      value: >-
+        https://ace-designer-ai-designer-https-tools.itzroks-270007kcnp-vdti7p-6ccd7f378ae819553d37d5f2ee142bd6-0000.us-south.containers.appdomain.cloud
+    app-connect-designer-username:
+      description: >-
+        The username required for basic authentication to the App Connect
+        Designer API endpoint.
+      value: nOqGA43M
+    app-connect-designer-password:
+      description: >-
+        The password required for basic authentication to the App Connect
+        Designer API endpoint.
+      value: EgF0Z48tldyeQI9piL3zwWV5B1mu7oTR
