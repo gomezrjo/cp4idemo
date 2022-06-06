@@ -13,3 +13,7 @@ This Repo contains multiple App Connect assets (a.k.a. BAR files) to be used as 
 * **jgr-cp4i-mock-backend** is an Integration that simulate the Back End system that process the request message. This is how the flow looks like:
 
 ![ACE Integrations Image 2](images/jgr-cp4i-mock-backend.png)
+
+* **SFLeads** is an Integration developed using the Designer Authoring Tool showcasing the SalesForce Smart Connector. This is how the flow looks like:
+
+![ACE Integrations Image 3](images/SFLead-Flow.png)
