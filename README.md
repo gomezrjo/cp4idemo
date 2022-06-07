@@ -25,3 +25,7 @@ This Repo contains multiple App Connect assets (a.k.a. BAR files) to be used as 
 * **jgr-cp4i-esapi-scram** is an Integration that exposes a Kafka Topic as a REST API. It uses the same contract as the *jgr-cp4i-mqapi* integrations. This is how the flow looks like:
 
 ![ACE Integrations Image 6](images/jgr-cp4i-esapi-scram.png)
+
+* **jgr-cp4i-mqivt** is a simple flow to demonstrate the basic ACE functionality with MQ that most "traditional" ACE users want to see. This is how the flow looks like:
+
+![ACE Integrations Image 7](images/jgr-cp4i-mqivt.png)
