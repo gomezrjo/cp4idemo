@@ -1,0 +1,22 @@
+apiVersion: integration.ibm.com/v1beta1
+kind: IntegrationAssembly
+metadata:
+  name: jgr-test
+  namespace: tools
+spec:
+  license:
+    accept: false
+    license: L-VTPK-22YZPK
+    use: CloudPakForIntegrationNonProduction
+  version: 2023.4.1
+  storage:
+    readWriteOnce:
+      class: ''
+  managedInstances:
+    list: []
+  independentResources:
+    selector:
+      matchLabels:
+        assembly.integration.ibm.com/tools.jgr-demo: 'true'
+  managedIntegrations:
+    list: []
