@@ -1,0 +1,134 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: trigger-action
+  trigger-interfaces:
+    trigger-interface-1:
+      type: event-trigger
+      connector-type: streaming-connector-scheduler
+      triggers:
+        SCHEDULE:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: scheduler
+          options:
+            subscription:
+              scheduleConfiguration:
+                interval:
+                  unit: minute
+                  value: 1
+                  runOnceOncheck: true
+                  days:
+                    - MON
+                    - TUE
+                    - WED
+                    - THU
+                    - FRI
+                    - SAT
+                    - SUN
+                  timeZone: UTC
+      account-name: Account 2
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: message
+      connector-type: kafka
+      account-name: JGR ES Demo
+      actions:
+        CREATE: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - set-variable:
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      index:
+                        type: number
+                      service:
+                        type: array
+                        items:
+                          type: string
+                      comment:
+                        type: array
+                        items:
+                          type: string
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - comment:
+                            expression: >-
+                              ["I am happy with the service provided","I like
+                              it","Awesome! Keep the good work","I didn't like
+                              it","I will never come back to this place","I do
+                              not recommend this company","Excelent!","The best
+                              service I have received","Never use this
+                              company","The worst experience ever"]
+                        - index:
+                            expression: $round($random()*10)
+                        - service:
+                            expression: '["registration", "food", "wifi"]'
+              name: Set variable
+          - set-variable:
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      service:
+                        type: string
+                      comment:
+                        type: string
+                      timestamp:
+                        type: string
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - comment:
+                            template: >-
+                              {{$Setvariable.variable.comment[$Setvariable.variable.index]}}
+                        - service:
+                            template: >-
+                              {{$Setvariable.variable.service[$Setvariable.variable.index%3]}}
+                        - timestamp:
+                            template: '{{$now()}}'
+              name: Set variable 2
+          - create-action:
+              name: Kafka Send message
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              map:
+                mappings:
+                  - Payload:
+                      template: '{{$Setvariable2.variable}}'
+                  - Topic:
+                      template: feedback
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+  name: KafkaLoader
+models: {}
