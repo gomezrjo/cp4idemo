@@ -1,0 +1,214 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        createBuilding:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: building
+          output-context:
+            data: building
+        retrieveBuilding:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-2'
+          input-context:
+            data: building
+          output-context:
+            data: building
+      options:
+        resources:
+          - business-object: building
+            model:
+              $ref: '#/models/building'
+            triggers:
+              create: createBuilding
+              retrieve: retrieveBuilding
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: jdbc
+      connector-type: jdbc
+      account-name: JGRAcct
+      actions:
+        EXECUTECUSTOMSQL: {}
+      account-info:
+        dbType: PostgreSQL
+    action-interface-2:
+      type: api-action
+      business-object: jdbc
+      connector-type: jdbc
+      account-name: JGRAcct
+      actions:
+        EXECUTECUSTOMSQL: {}
+      account-info:
+        dbType: PostgreSQL
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - custom-action:
+              name: JDBC Custom query
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              action: EXECUTECUSTOMSQL
+              map:
+                mappings:
+                  - customSql:
+                      format:
+                        type: sql
+                      template: >-
+                        INSERT INTO buildings VALUES
+                        ({{$Request.buildingid}},{{$Request.streetname}},{{$Request.securitycontact}})
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - response:
+              name: response-1
+              reply-maps:
+                - title: building successfully created
+                  status-code: 201
+                  map:
+                    mappings:
+                      - buildingid:
+                          template: '{{$Request.buildingid}}'
+                      - securitycontact:
+                          template: '{{$Request.securitycontact}}'
+                      - streetname:
+                          template: '{{$Request.streetname}}'
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: JDBCCustomquery
+                        $ref: '#/node-output/JDBC Custom query/response/payload'
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                  input: []
+    assembly-2:
+      assembly:
+        execute:
+          - custom-action:
+              name: JDBC Custom query
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              action: EXECUTECUSTOMSQL
+              map:
+                mappings:
+                  - customSql:
+                      format:
+                        type: sql
+                      template: >-
+                        select * from buildings where
+                        buildingid={{$api.buildingid}}
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - parse:
+              name: JSON Parser Parse
+              parse-format: json
+              source:
+                template: '{{$JDBCCustomquery.data}}'
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                  - variable: JDBCCustomquery
+                    $ref: '#/node-output/JDBC Custom query/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              sample-data: |-
+                {
+                "buildingid": "A",
+                "streetname": "Warren Spinney",
+                "securitycontact": "+1 202-918-2132"
+                }
+              output-schema:
+                $schema: http://json-schema.org/draft-04/schema#
+                type: object
+                properties:
+                  buildingid:
+                    type: string
+                  streetname:
+                    type: string
+                  securitycontact:
+                    type: string
+                title: Parsed JSON
+          - response:
+              name: response-1
+              reply-maps:
+                - title: building successfully retrieved
+                  status-code: 200
+                  map:
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: api
+                        $ref: '#/trigger/api/parameters'
+                      - variable: JDBCCustomquery
+                        $ref: '#/node-output/JDBC Custom query/response/payload'
+                      - variable: JSONParserParse
+                        $ref: '#/node-output/JSON Parser Parse/response/payload'
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                    mappings:
+                      - buildingid:
+                          template: '{{$JSONParserParse.buildingid}}'
+                      - securitycontact:
+                          template: '{{$JSONParserParse.securitycontact}}'
+                      - streetname:
+                          template: '{{$JSONParserParse.streetname}}'
+                  input: []
+  name: API4PGSQL
+models:
+  building:
+    name: building
+    properties:
+      buildingid:
+        required: false
+        id: true
+        type: string
+      streetname:
+        required: false
+        id: false
+        type: string
+      securitycontact:
+        required: false
+        id: false
+        type: string
+    plural: building
+    description: ' '
+    operations:
+      create: '#/integration/assemblies/assembly-1'
+      retrieve: '#/integration/assemblies/assembly-2'
+x-ibm-configuration:
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          title: Invoke flow
+          version: 2.0.0
+          verb: keep
+          target-url: $(app-connect-designer-url)$(request.path)
+          follow-redirects: false
+          timeout: 60
+          parameter-control:
+            type: blocklist
+          header-control:
+            type: blocklist
+          inject-proxy-headers: true
+          username: $(app-connect-designer-username)
+          password: $(app-connect-designer-password)
