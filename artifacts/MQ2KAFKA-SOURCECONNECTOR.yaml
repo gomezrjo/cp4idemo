@@ -1,0 +1,135 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        createMessage:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: message
+          output-context:
+            data: message
+      options:
+        resources:
+          - business-object: message
+            model:
+              $ref: '#/models/message'
+            triggers:
+              create: createMessage
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: message
+      connector-type: mq
+      account-name: Account 1
+      actions:
+        PUTMESSAGE: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - custom-action:
+              name: IBM MQ Put message on a queue
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              action: PUTMESSAGE
+              map:
+                mappings:
+                  - message:
+                      template: '{{$Request}}'
+                  - messageType:
+                      template: TEXT
+                  - queueName:
+                      template: CP4I.DEMO.MQ.TO.ES
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - response:
+              name: response-1
+              reply-maps:
+                - title: message successfully created
+                  status-code: 201
+                  map:
+                    mappings:
+                      - id:
+                          template: '{{$IBMMQPutmessageonaqueue.msgId}}'
+                      - timestamp:
+                          template: '{{$now()}}'
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: IBMMQPutmessageonaqueue
+                        $ref: >-
+                          #/node-output/IBM MQ Put message on a
+                          queue/response/payload
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                  input: []
+  name: MQ2KAFKA-SOURCECONNECTOR
+models:
+  message:
+    name: message
+    properties:
+      id:
+        required: false
+        id: true
+        type: string
+      data:
+        required: false
+        id: false
+        type: string
+      timestamp:
+        required: false
+        id: false
+        type: string
+    plural: message
+    description: ' '
+    operations:
+      create: '#/integration/assemblies/assembly-1'
+x-ibm-configuration:
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          title: Invoke flow
+          version: 2.0.0
+          verb: keep
+          target-url: $(app-connect-designer-url)$(request.path)
+          follow-redirects: false
+          timeout: 60
+          parameter-control:
+            type: blocklist
+          header-control:
+            type: blocklist
+          inject-proxy-headers: true
+          username: $(app-connect-designer-username)
+          password: $(app-connect-designer-password)
+  properties:
+    app-connect-designer-url:
+      description: The URL of the App Connect Designer API endpoint.
+      encoded: false
+      value: >-
+        https://ace-designer-ai-designer-https-tools.apps.663d73de953c6b001ec9bf21.cloud.techzone.ibm.com
+    app-connect-designer-username:
+      description: >-
+        The username required for basic authentication to the App Connect
+        Designer API endpoint.
+      value: NAS14cDe
+    app-connect-designer-password:
+      description: >-
+        The password required for basic authentication to the App Connect
+        Designer API endpoint.
+      value: aS57wMv6Qk1lyXJ89KidcBnjRFrYxP40
