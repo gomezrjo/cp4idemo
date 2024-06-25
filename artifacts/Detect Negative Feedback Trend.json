@@ -1,0 +1,413 @@
+{
+  "pipelineState": {
+    "doc_type": "pipeline",
+    "version": "3.0",
+    "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+    "id": "43d49db9-5618-49e9-bf2e-cc9f46386baf",
+    "primary_pipeline": "0ac8e0d4-091a-43a8-9c0a-c68c3b4c96e6",
+    "pipelines": [
+      {
+        "id": "0ac8e0d4-091a-43a8-9c0a-c68c3b4c96e6",
+        "nodes": [
+          {
+            "id": "e1e5b6b0-c438-4cb8-a46f-4dc741258f89",
+            "type": "source",
+            "app_data": {
+              "node_type": "source",
+              "ui_data": {
+                "label": "Customer Feedback",
+                "image": "/images/svg/source.svg",
+                "x_pos": 50,
+                "y_pos": 50
+              }
+            },
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "0a456bcf-17eb-4960-a7be-14f8090a9f23",
+            "type": "filter",
+            "app_data": {
+              "node_type": "filter",
+              "ui_data": {
+                "label": "Filter Negative Feedback",
+                "image": "/images/svg/filter.svg",
+                "x_pos": 229,
+                "y_pos": 138
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "a48fc110-6a92-41e1-a1b8-1969d8756861",
+                    "node_id_ref": "e1e5b6b0-c438-4cb8-a46f-4dc741258f89",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "b5c8d094-d0b0-4efe-837b-ccedaf4faac0",
+            "type": "aggregate",
+            "app_data": {
+              "node_type": "aggregate",
+              "ui_data": {
+                "label": "Aggregate Events Over Time",
+                "image": "/images/svg/aggregate.svg",
+                "x_pos": 334,
+                "y_pos": 244
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "3d1cc36c-1adb-452a-8ef4-3ead14edab62",
+                    "node_id_ref": "0a456bcf-17eb-4960-a7be-14f8090a9f23",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "32fa1eb8-c097-4762-9daf-4723bcada05e",
+            "type": "sink",
+            "app_data": {
+              "node_type": "sink",
+              "ui_data": {
+                "label": "Service Status",
+                "image": "/images/svg/sink.svg",
+                "x_pos": 501,
+                "y_pos": 344
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "f5a4bf83-e0a4-47e8-9ffc-08cdb4b2b7e6",
+                    "node_id_ref": "b5c8d094-d0b0-4efe-837b-ccedaf4faac0",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "app_data": {
+          "ui_data": {
+            "comments": []
+          }
+        },
+        "runtime_ref": ""
+      }
+    ],
+    "schemas": []
+  },
+  "contextState": {
+    "edges": [
+      {
+        "incoming": "e1e5b6b0-c438-4cb8-a46f-4dc741258f89",
+        "outgoing": "0a456bcf-17eb-4960-a7be-14f8090a9f23"
+      },
+      {
+        "incoming": "0a456bcf-17eb-4960-a7be-14f8090a9f23",
+        "outgoing": "b5c8d094-d0b0-4efe-837b-ccedaf4faac0"
+      },
+      {
+        "incoming": "b5c8d094-d0b0-4efe-837b-ccedaf4faac0",
+        "outgoing": "32fa1eb8-c097-4762-9daf-4723bcada05e"
+      }
+    ],
+    "nodes": [
+      {
+        "viewName": "Customer Feedback",
+        "nodeId": "e1e5b6b0-c438-4cb8-a46f-4dc741258f89",
+        "nodeType": "source",
+        "configuration": {
+          "topicName": "Customer Feedback",
+          "bootstrapServers": [
+            "es-demo-kafka-bootstrap.tools.svc:9095"
+          ],
+          "ssl": true,
+          "topic": "Customer.Feedback.Sentiment.V1",
+          "sampleMessage": "",
+          "fields": [
+            {
+              "name": "name",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "email",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "company",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "severity",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "services",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "case_description",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "case_time",
+              "selected": true,
+              "type": "TIMESTAMP_LTZ_UDF",
+              "jsonType": "string",
+              "tsFormat": "TIMESTAMP_LTZ_UDF"
+            },
+            {
+              "name": "sentiment",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "event_id",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            }
+          ],
+          "watermark": {
+            "watermarkWithEventSource": true,
+            "topicLocalTimeRequired": false,
+            "timeUnit": "MINUTE",
+            "interval": 1,
+            "watermarkColumn": "case_time"
+          },
+          "configureNewSource": true,
+          "topicIdForReuse": "configureNewSource",
+          "persistSourceTopic": true,
+          "isSourceEditable": true,
+          "format": "json",
+          "certificatesAccepted": true,
+          "type": "SASL",
+          "certs": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----\n"
+            },
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIFLTCCAxWgAwIBAgIUKMpTXJciIodDr6+swdC5vN2OgT0wDQYJKoZIhvcNAQENBQAwLTETMBEGA1UECgwKaW8uc3RyaW16aTEWMBQGA1UEAwwNY2x1c3Rlci1jYSB2MDAeFw0yNDA2MDkwNDI1NTJaFw0yNDA5MDcwNDI1NTJaMC0xEzARBgNVBAoMCmlvLnN0cmltemkxFjAUBgNVBAMMDWNsdXN0ZXItY2EgdjAwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCnLGzTqP97NvfPbha4zEf4lucOTgT65TTbsYJ840Bjx222B2fpVy9Uwew3xg/67I+y5/kaZ+VgTe0nQWb7fktB2pl3z5P9HuHJhbKeBEO0GqNLO4PqFWS/iDt5xHeKTOwAvt4I8KSQp8dfbSyvKgoguL4F4sZRX4hxeWSqGB5jIyIznt+772/9PnNmYr1Kebh45ksfdSUOQvwTmspAbSQNMdbV6oBQ1F8Tw956L+HIYyvlZmyszyQvkAa4SacClAV56qwNT6tDTtIGzSLAke19ECY4oL3EbGnfya0YAQOeVKooZUyQ5fHHbDOuD3KQpcHE62NVex/MDvJdvgUIsYPMlwkVCiq1GDsLFadk/LBGzV25/zmOgp3XpfPjqvlJMC1cCyE17EX4qXmnmDQivro6SUEK851fCr9yRHwQaPlHw9N5jIVFa+Os5VvfJt8sDOuufl8rNSTMH0PiKTK5BwoyF/1xQt7Bgd6N2tAaxAp09dUVQG5RemVKV0iWrxMXGDkq7PCVCi4b0azUXTZkeWwJ8RP2/k5qtBs4jZMArKYSinASZLfXNtJUUJhUbgYMq60iT+TdBu2Ssx6IkvRt44ixb1IkL5H0pWfong2QVTwvtH1BVaxXrrKgTZB47O+3ao8/26QG/OT4fcQL/A2WMS2m9oChMriPJKu9uxYn3AnVkwIDAQABo0UwQzAdBgNVHQ4EFgQUdG9dlDIfaeQgNLE1uAojZNjJC0owEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQENBQADggIBAKM3O9y87GgReVnvGEdPvX1tPNvHEV56u7o1IWteOrgEN9hK6/7y6eeV2/EN5NDYt1CSPEzci6+oOiyl99x+bC9k4DPwCSmA6m6ziyy3KJKR9cbKJvXn2THMZrS1Y9CltCWUCqiVGaCKRkZtdK/qVoS6FxnpTiMLOQVXSEsvkus/cwL6ub6qoxDfshW5taw6cfbg3dIrj0blY9xrPuiBi4HhEVh9HirEXzsaTG1Ec7s/itDF0xMRZa7O6e4wjkgKVLLe8Ux6M4NgQ1dw0ox6i3ceOcW1gzfDTq6uLgRTldsnDlm10/S3rVfEowN4RyXRBoxzq0kztThnmln1wJoZYGujhjta/dGysv0UHeQIcGGL480mOo8sOn4k15pF/N3hEKKp5RSWnCoZvfBN/pl3sn8fh3BNtqHoJQbjxqIBlrsby81Xji9UXjbU6TcffCIBbHi146aS4jG74vUGjwnLS2biHMM/2c+AXUdow4wS7W7gbQr0UM+A252g1HOX7Jj1aplJ9TmBPDzfpjzBbnIi/GXqoa1HS0AL4bhdKfEwkttA+u7wx6+EZnPVd7uMwjF7FNFxTavouDo4eWBSTUtgmKKuDhu2/3QW7W4YKEqDlTtoddwFVTX4Hs1H7Qbg3x67AJDmzREGioFt2SdMyXwa8ZgsI3KCCTUXRrOGFIZPoeD5\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "mechanism": "SCRAM-SHA-512",
+          "username": "ep-user",
+          "password": "i4mY2ZQacGlD0HclFPOyo2YWlTbTc1ye",
+          "topicAlias": "",
+          "topicPayload": "{\n  \"name\": \"Rashid\",\n  \"email\": \"Rashid.Aljohani@ibm.com\",\n  \"company\": \"IBM\",\n  \"severity\": \"2\",\n  \"services\": \"Source-code Audit\",\n  \"case_description\": \"The product quality is consistently outstanding, exceeding my expectations every time.\",\n  \"case_time\": \"2024-02-20T14:42:11.391Z\",\n  \"sentiment\": \"Positive\",\n  \"event_id\": \"1718206931529\"\n}",
+          "hasSourcePersisted": true
+        }
+      },
+      {
+        "viewName": "Filter Negative Feedback",
+        "nodeId": "0a456bcf-17eb-4960-a7be-14f8090a9f23",
+        "nodeType": "filter",
+        "configuration": {
+          "statement": "`sentiment` LIKE 'Negative'"
+        }
+      },
+      {
+        "viewName": "Aggregate Events Over Time",
+        "nodeId": "b5c8d094-d0b0-4efe-837b-ccedaf4faac0",
+        "nodeType": "aggregate",
+        "configuration": {
+          "functions": [
+            {
+              "id": "COUNT_services",
+              "name": "COUNT",
+              "distinct": false,
+              "source": {
+                "column": "services"
+              }
+            }
+          ],
+          "groupBy": [
+            {
+              "column": "services"
+            }
+          ],
+          "columns": [
+            {
+              "outputColumn": "numberOfComplaints",
+              "input": {
+                "column": "COUNT_services"
+              },
+              "aggregateFunctionId": "COUNT_services",
+              "kind": "AGGREGATE_RESULT"
+            },
+            {
+              "outputColumn": "services",
+              "input": {
+                "column": "services"
+              },
+              "kind": "GROUP_BY"
+            },
+            {
+              "outputColumn": "aggregateStartTime",
+              "input": {
+                "column": "aggregateStartTime"
+              },
+              "kind": "WINDOW_START"
+            },
+            {
+              "outputColumn": "aggregateEndTime",
+              "input": {
+                "column": "aggregateEndTime"
+              },
+              "kind": "WINDOW_END"
+            },
+            {
+              "outputColumn": "aggregateResultTime",
+              "input": {
+                "column": "aggregateResultTime"
+              },
+              "kind": "WINDOW_TIME"
+            }
+          ],
+          "timeEvent": {
+            "table": "",
+            "column": "case_time"
+          },
+          "aggregationPeriod": {
+            "interval": 1,
+            "timeUnit": "HOUR"
+          }
+        }
+      },
+      {
+        "viewName": "Service Status",
+        "nodeId": "32fa1eb8-c097-4762-9daf-4723bcada05e",
+        "nodeType": "sink",
+        "configuration": {
+          "topicName": "Service Status",
+          "topic": "Service.Status.V1",
+          "bootstrapServers": [
+            "es-demo-kafka-bootstrap.tools.svc:9095"
+          ],
+          "ssl": true,
+          "certificatesAccepted": true,
+          "type": "SASL",
+          "certs": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----\n"
+            },
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIFLTCCAxWgAwIBAgIUKMpTXJciIodDr6+swdC5vN2OgT0wDQYJKoZIhvcNAQENBQAwLTETMBEGA1UECgwKaW8uc3RyaW16aTEWMBQGA1UEAwwNY2x1c3Rlci1jYSB2MDAeFw0yNDA2MDkwNDI1NTJaFw0yNDA5MDcwNDI1NTJaMC0xEzARBgNVBAoMCmlvLnN0cmltemkxFjAUBgNVBAMMDWNsdXN0ZXItY2EgdjAwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCnLGzTqP97NvfPbha4zEf4lucOTgT65TTbsYJ840Bjx222B2fpVy9Uwew3xg/67I+y5/kaZ+VgTe0nQWb7fktB2pl3z5P9HuHJhbKeBEO0GqNLO4PqFWS/iDt5xHeKTOwAvt4I8KSQp8dfbSyvKgoguL4F4sZRX4hxeWSqGB5jIyIznt+772/9PnNmYr1Kebh45ksfdSUOQvwTmspAbSQNMdbV6oBQ1F8Tw956L+HIYyvlZmyszyQvkAa4SacClAV56qwNT6tDTtIGzSLAke19ECY4oL3EbGnfya0YAQOeVKooZUyQ5fHHbDOuD3KQpcHE62NVex/MDvJdvgUIsYPMlwkVCiq1GDsLFadk/LBGzV25/zmOgp3XpfPjqvlJMC1cCyE17EX4qXmnmDQivro6SUEK851fCr9yRHwQaPlHw9N5jIVFa+Os5VvfJt8sDOuufl8rNSTMH0PiKTK5BwoyF/1xQt7Bgd6N2tAaxAp09dUVQG5RemVKV0iWrxMXGDkq7PCVCi4b0azUXTZkeWwJ8RP2/k5qtBs4jZMArKYSinASZLfXNtJUUJhUbgYMq60iT+TdBu2Ssx6IkvRt44ixb1IkL5H0pWfong2QVTwvtH1BVaxXrrKgTZB47O+3ao8/26QG/OT4fcQL/A2WMS2m9oChMriPJKu9uxYn3AnVkwIDAQABo0UwQzAdBgNVHQ4EFgQUdG9dlDIfaeQgNLE1uAojZNjJC0owEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQENBQADggIBAKM3O9y87GgReVnvGEdPvX1tPNvHEV56u7o1IWteOrgEN9hK6/7y6eeV2/EN5NDYt1CSPEzci6+oOiyl99x+bC9k4DPwCSmA6m6ziyy3KJKR9cbKJvXn2THMZrS1Y9CltCWUCqiVGaCKRkZtdK/qVoS6FxnpTiMLOQVXSEsvkus/cwL6ub6qoxDfshW5taw6cfbg3dIrj0blY9xrPuiBi4HhEVh9HirEXzsaTG1Ec7s/itDF0xMRZa7O6e4wjkgKVLLe8Ux6M4NgQ1dw0ox6i3ceOcW1gzfDTq6uLgRTldsnDlm10/S3rVfEowN4RyXRBoxzq0kztThnmln1wJoZYGujhjta/dGysv0UHeQIcGGL480mOo8sOn4k15pF/N3hEKKp5RSWnCoZvfBN/pl3sn8fh3BNtqHoJQbjxqIBlrsby81Xji9UXjbU6TcffCIBbHi146aS4jG74vUGjwnLS2biHMM/2c+AXUdow4wS7W7gbQr0UM+A252g1HOX7Jj1aplJ9TmBPDzfpjzBbnIi/GXqoa1HS0AL4bhdKfEwkttA+u7wx6+EZnPVd7uMwjF7FNFxTavouDo4eWBSTUtgmKKuDhu2/3QW7W4YKEqDlTtoddwFVTX4Hs1H7Qbg3x67AJDmzREGioFt2SdMyXwa8ZgsI3KCCTUXRrOGFIZPoeD5\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "mechanism": "SCRAM-SHA-512",
+          "username": "ep-user",
+          "password": "i4mY2ZQacGlD0HclFPOyo2YWlTbTc1ye",
+          "topicAlias": ""
+        }
+      }
+    ]
+  },
+  "flowDetails": {
+    "flowName": "Detect Negative Feedback Trend",
+    "flowDescription": "",
+    "flowVersion": 3
+  }
+}

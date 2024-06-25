@@ -1,0 +1,350 @@
+{
+  "pipelineState": {
+    "doc_type": "pipeline",
+    "version": "3.0",
+    "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+    "id": "2ec7b23a-4646-401e-bb8b-9d7d4e4a6f6c",
+    "primary_pipeline": "04c60a03-f254-4e7a-9ea5-70b34c5dc2e4",
+    "pipelines": [
+      {
+        "id": "04c60a03-f254-4e7a-9ea5-70b34c5dc2e4",
+        "nodes": [
+          {
+            "id": "131dcde7-d330-4724-a3ba-45ce277c95d1",
+            "type": "source",
+            "app_data": {
+              "node_type": "source",
+              "ui_data": {
+                "label": "Service Status",
+                "image": "/images/svg/source.svg",
+                "x_pos": 50,
+                "y_pos": 50
+              }
+            },
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "d5e03eb3-1b5c-4517-bf94-9bc9be38323d",
+            "type": "filter",
+            "app_data": {
+              "node_type": "filter",
+              "ui_data": {
+                "label": "High Number of Complaints",
+                "image": "/images/svg/filter.svg",
+                "x_pos": 241,
+                "y_pos": 145
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "df2763ab-91d8-41e4-af70-00e80ef755cd",
+                    "node_id_ref": "131dcde7-d330-4724-a3ba-45ce277c95d1",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "1f6dea79-c072-469c-a0b6-d8bd67d7e7c4",
+            "type": "transform",
+            "app_data": {
+              "node_type": "transform",
+              "ui_data": {
+                "label": "Transform Event",
+                "image": "/images/svg/transform.svg",
+                "x_pos": 361,
+                "y_pos": 250
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "c0a68933-6cae-467b-ba19-3e77a2c020ec",
+                    "node_id_ref": "d5e03eb3-1b5c-4517-bf94-9bc9be38323d",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "d508a828-fcab-46d8-8a87-abd3fe3f4d01",
+            "type": "sink",
+            "app_data": {
+              "node_type": "sink",
+              "ui_data": {
+                "label": "Service at Risk",
+                "image": "/images/svg/sink.svg",
+                "x_pos": 505,
+                "y_pos": 365
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "c5d66340-273f-4bb0-ba2f-54dc321bad34",
+                    "node_id_ref": "1f6dea79-c072-469c-a0b6-d8bd67d7e7c4",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "app_data": {
+          "ui_data": {
+            "comments": []
+          }
+        },
+        "runtime_ref": ""
+      }
+    ],
+    "schemas": []
+  },
+  "contextState": {
+    "edges": [
+      {
+        "incoming": "131dcde7-d330-4724-a3ba-45ce277c95d1",
+        "outgoing": "d5e03eb3-1b5c-4517-bf94-9bc9be38323d"
+      },
+      {
+        "incoming": "d5e03eb3-1b5c-4517-bf94-9bc9be38323d",
+        "outgoing": "1f6dea79-c072-469c-a0b6-d8bd67d7e7c4"
+      },
+      {
+        "incoming": "1f6dea79-c072-469c-a0b6-d8bd67d7e7c4",
+        "outgoing": "d508a828-fcab-46d8-8a87-abd3fe3f4d01"
+      }
+    ],
+    "nodes": [
+      {
+        "viewName": "Service Status",
+        "nodeId": "131dcde7-d330-4724-a3ba-45ce277c95d1",
+        "nodeType": "source",
+        "configuration": {
+          "topicName": "Service Status",
+          "bootstrapServers": [
+            "es-demo-kafka-bootstrap.tools.svc:9095"
+          ],
+          "ssl": true,
+          "topic": "Service.Status.V1",
+          "sampleMessage": "",
+          "fields": [
+            {
+              "name": "numberOfComplaints",
+              "selected": true,
+              "type": "BIGINT",
+              "jsonType": "bigint",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "services",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "aggregateStartTime",
+              "selected": true,
+              "type": "TIMESTAMP_UDF",
+              "jsonType": "string",
+              "tsFormat": "TIMESTAMP_UDF"
+            },
+            {
+              "name": "aggregateEndTime",
+              "selected": true,
+              "type": "TIMESTAMP_UDF",
+              "jsonType": "string",
+              "tsFormat": "TIMESTAMP_UDF"
+            },
+            {
+              "name": "aggregateResultTime",
+              "selected": true,
+              "type": "TIMESTAMP_LTZ_UDF",
+              "jsonType": "string",
+              "tsFormat": "TIMESTAMP_LTZ_UDF"
+            }
+          ],
+          "watermark": {
+            "watermarkWithEventSource": true,
+            "topicLocalTimeRequired": true,
+            "timeUnit": "MINUTE",
+            "interval": 1,
+            "watermarkColumn": "event_time"
+          },
+          "configureNewSource": true,
+          "topicIdForReuse": "configureNewSource",
+          "persistSourceTopic": true,
+          "isSourceEditable": true,
+          "format": "json",
+          "certificatesAccepted": true,
+          "type": "SASL",
+          "certs": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----\n"
+            },
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIFLTCCAxWgAwIBAgIUKMpTXJciIodDr6+swdC5vN2OgT0wDQYJKoZIhvcNAQENBQAwLTETMBEGA1UECgwKaW8uc3RyaW16aTEWMBQGA1UEAwwNY2x1c3Rlci1jYSB2MDAeFw0yNDA2MDkwNDI1NTJaFw0yNDA5MDcwNDI1NTJaMC0xEzARBgNVBAoMCmlvLnN0cmltemkxFjAUBgNVBAMMDWNsdXN0ZXItY2EgdjAwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCnLGzTqP97NvfPbha4zEf4lucOTgT65TTbsYJ840Bjx222B2fpVy9Uwew3xg/67I+y5/kaZ+VgTe0nQWb7fktB2pl3z5P9HuHJhbKeBEO0GqNLO4PqFWS/iDt5xHeKTOwAvt4I8KSQp8dfbSyvKgoguL4F4sZRX4hxeWSqGB5jIyIznt+772/9PnNmYr1Kebh45ksfdSUOQvwTmspAbSQNMdbV6oBQ1F8Tw956L+HIYyvlZmyszyQvkAa4SacClAV56qwNT6tDTtIGzSLAke19ECY4oL3EbGnfya0YAQOeVKooZUyQ5fHHbDOuD3KQpcHE62NVex/MDvJdvgUIsYPMlwkVCiq1GDsLFadk/LBGzV25/zmOgp3XpfPjqvlJMC1cCyE17EX4qXmnmDQivro6SUEK851fCr9yRHwQaPlHw9N5jIVFa+Os5VvfJt8sDOuufl8rNSTMH0PiKTK5BwoyF/1xQt7Bgd6N2tAaxAp09dUVQG5RemVKV0iWrxMXGDkq7PCVCi4b0azUXTZkeWwJ8RP2/k5qtBs4jZMArKYSinASZLfXNtJUUJhUbgYMq60iT+TdBu2Ssx6IkvRt44ixb1IkL5H0pWfong2QVTwvtH1BVaxXrrKgTZB47O+3ao8/26QG/OT4fcQL/A2WMS2m9oChMriPJKu9uxYn3AnVkwIDAQABo0UwQzAdBgNVHQ4EFgQUdG9dlDIfaeQgNLE1uAojZNjJC0owEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQENBQADggIBAKM3O9y87GgReVnvGEdPvX1tPNvHEV56u7o1IWteOrgEN9hK6/7y6eeV2/EN5NDYt1CSPEzci6+oOiyl99x+bC9k4DPwCSmA6m6ziyy3KJKR9cbKJvXn2THMZrS1Y9CltCWUCqiVGaCKRkZtdK/qVoS6FxnpTiMLOQVXSEsvkus/cwL6ub6qoxDfshW5taw6cfbg3dIrj0blY9xrPuiBi4HhEVh9HirEXzsaTG1Ec7s/itDF0xMRZa7O6e4wjkgKVLLe8Ux6M4NgQ1dw0ox6i3ceOcW1gzfDTq6uLgRTldsnDlm10/S3rVfEowN4RyXRBoxzq0kztThnmln1wJoZYGujhjta/dGysv0UHeQIcGGL480mOo8sOn4k15pF/N3hEKKp5RSWnCoZvfBN/pl3sn8fh3BNtqHoJQbjxqIBlrsby81Xji9UXjbU6TcffCIBbHi146aS4jG74vUGjwnLS2biHMM/2c+AXUdow4wS7W7gbQr0UM+A252g1HOX7Jj1aplJ9TmBPDzfpjzBbnIi/GXqoa1HS0AL4bhdKfEwkttA+u7wx6+EZnPVd7uMwjF7FNFxTavouDo4eWBSTUtgmKKuDhu2/3QW7W4YKEqDlTtoddwFVTX4Hs1H7Qbg3x67AJDmzREGioFt2SdMyXwa8ZgsI3KCCTUXRrOGFIZPoeD5\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "mechanism": "SCRAM-SHA-512",
+          "username": "ep-user",
+          "password": "i4mY2ZQacGlD0HclFPOyo2YWlTbTc1ye",
+          "topicAlias": "",
+          "topicPayload": "{\n  \"numberOfComplaints\": 2,\n  \"services\": \"Source-code Audit\",\n  \"aggregateStartTime\": \"2024-02-20 14:00:00\",\n  \"aggregateEndTime\": \"2024-02-20 15:00:00\",\n  \"aggregateResultTime\": \"2024-02-20 14:59:59.999Z\"\n}",
+          "hasSourcePersisted": true
+        }
+      },
+      {
+        "viewName": "High Number of Complaints",
+        "nodeId": "d5e03eb3-1b5c-4517-bf94-9bc9be38323d",
+        "nodeType": "filter",
+        "configuration": {
+          "statement": "`numberOfComplaints` > 1"
+        }
+      },
+      {
+        "viewName": "Transform Event",
+        "nodeId": "1f6dea79-c072-469c-a0b6-d8bd67d7e7c4",
+        "nodeType": "transform",
+        "configuration": {
+          "columns": [
+            {
+              "outputColumn": "number_of_complaints",
+              "input": {
+                "column": "numberOfComplaints"
+              }
+            },
+            {
+              "outputColumn": "services",
+              "input": {
+                "column": "services"
+              }
+            },
+            {
+              "outputColumn": "created_at",
+              "input": {
+                "column": "aggregateStartTime"
+              }
+            },
+            {
+              "outputColumn": "finished_at",
+              "input": {
+                "column": "aggregateEndTime"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "viewName": "Service at Risk",
+        "nodeId": "d508a828-fcab-46d8-8a87-abd3fe3f4d01",
+        "nodeType": "sink",
+        "configuration": {
+          "topicName": "Service at Risk",
+          "topic": "Service.at.Risk.V1",
+          "bootstrapServers": [
+            "es-demo-kafka-bootstrap.tools.svc:9095"
+          ],
+          "ssl": true,
+          "certificatesAccepted": true,
+          "type": "SASL",
+          "certs": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----\n"
+            },
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIFLTCCAxWgAwIBAgIUKMpTXJciIodDr6+swdC5vN2OgT0wDQYJKoZIhvcNAQENBQAwLTETMBEGA1UECgwKaW8uc3RyaW16aTEWMBQGA1UEAwwNY2x1c3Rlci1jYSB2MDAeFw0yNDA2MDkwNDI1NTJaFw0yNDA5MDcwNDI1NTJaMC0xEzARBgNVBAoMCmlvLnN0cmltemkxFjAUBgNVBAMMDWNsdXN0ZXItY2EgdjAwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCnLGzTqP97NvfPbha4zEf4lucOTgT65TTbsYJ840Bjx222B2fpVy9Uwew3xg/67I+y5/kaZ+VgTe0nQWb7fktB2pl3z5P9HuHJhbKeBEO0GqNLO4PqFWS/iDt5xHeKTOwAvt4I8KSQp8dfbSyvKgoguL4F4sZRX4hxeWSqGB5jIyIznt+772/9PnNmYr1Kebh45ksfdSUOQvwTmspAbSQNMdbV6oBQ1F8Tw956L+HIYyvlZmyszyQvkAa4SacClAV56qwNT6tDTtIGzSLAke19ECY4oL3EbGnfya0YAQOeVKooZUyQ5fHHbDOuD3KQpcHE62NVex/MDvJdvgUIsYPMlwkVCiq1GDsLFadk/LBGzV25/zmOgp3XpfPjqvlJMC1cCyE17EX4qXmnmDQivro6SUEK851fCr9yRHwQaPlHw9N5jIVFa+Os5VvfJt8sDOuufl8rNSTMH0PiKTK5BwoyF/1xQt7Bgd6N2tAaxAp09dUVQG5RemVKV0iWrxMXGDkq7PCVCi4b0azUXTZkeWwJ8RP2/k5qtBs4jZMArKYSinASZLfXNtJUUJhUbgYMq60iT+TdBu2Ssx6IkvRt44ixb1IkL5H0pWfong2QVTwvtH1BVaxXrrKgTZB47O+3ao8/26QG/OT4fcQL/A2WMS2m9oChMriPJKu9uxYn3AnVkwIDAQABo0UwQzAdBgNVHQ4EFgQUdG9dlDIfaeQgNLE1uAojZNjJC0owEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQENBQADggIBAKM3O9y87GgReVnvGEdPvX1tPNvHEV56u7o1IWteOrgEN9hK6/7y6eeV2/EN5NDYt1CSPEzci6+oOiyl99x+bC9k4DPwCSmA6m6ziyy3KJKR9cbKJvXn2THMZrS1Y9CltCWUCqiVGaCKRkZtdK/qVoS6FxnpTiMLOQVXSEsvkus/cwL6ub6qoxDfshW5taw6cfbg3dIrj0blY9xrPuiBi4HhEVh9HirEXzsaTG1Ec7s/itDF0xMRZa7O6e4wjkgKVLLe8Ux6M4NgQ1dw0ox6i3ceOcW1gzfDTq6uLgRTldsnDlm10/S3rVfEowN4RyXRBoxzq0kztThnmln1wJoZYGujhjta/dGysv0UHeQIcGGL480mOo8sOn4k15pF/N3hEKKp5RSWnCoZvfBN/pl3sn8fh3BNtqHoJQbjxqIBlrsby81Xji9UXjbU6TcffCIBbHi146aS4jG74vUGjwnLS2biHMM/2c+AXUdow4wS7W7gbQr0UM+A252g1HOX7Jj1aplJ9TmBPDzfpjzBbnIi/GXqoa1HS0AL4bhdKfEwkttA+u7wx6+EZnPVd7uMwjF7FNFxTavouDo4eWBSTUtgmKKuDhu2/3QW7W4YKEqDlTtoddwFVTX4Hs1H7Qbg3x67AJDmzREGioFt2SdMyXwa8ZgsI3KCCTUXRrOGFIZPoeD5\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "mechanism": "SCRAM-SHA-512",
+          "username": "ep-user",
+          "password": "i4mY2ZQacGlD0HclFPOyo2YWlTbTc1ye",
+          "topicAlias": ""
+        }
+      }
+    ]
+  },
+  "flowDetails": {
+    "flowName": "Detect Services at Risk",
+    "flowDescription": "",
+    "flowVersion": 3
+  }
+}

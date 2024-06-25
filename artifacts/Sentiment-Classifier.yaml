@@ -1,0 +1,338 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: trigger-action
+  trigger-interfaces:
+    trigger-interface-1:
+      type: event-trigger
+      connector-type: kafka
+      triggers:
+        CREATED:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: message
+          options:
+            Topic: Customer.Feedback.V1
+            parentFilter:
+              Topic: Customer.Feedback.V1
+            subscription: {}
+      account-name: Account 1
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: request
+      connector-type: http
+      account-name: Account 1
+      actions:
+        INVOKE: {}
+    action-interface-2:
+      type: api-action
+      business-object: message
+      connector-type: kafka
+      account-name: Account 1
+      actions:
+        CREATE: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - parse:
+              parse-format: json
+              source:
+                template: '{{$Trigger.Payload}}'
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              sample-data: >-
+                {
+
+                "name": "Rashid",
+
+                "email": "Rashid.Aljohani@ibm.com",
+
+                "company": "IBM",
+
+                "severity": "2",
+
+                "services": "Source-code Audit",
+
+                "case_description": "The product quality is consistently
+                outstanding, exceeding my expectations every time.",
+
+                "case_time": "2024-02-20T14:42:11.391Z"
+
+                }
+              output-schema:
+                $schema: http://json-schema.org/draft-04/schema#
+                type: object
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  company:
+                    type: string
+                  severity:
+                    type: string
+                  services:
+                    type: string
+                  case_description:
+                    type: string
+                  case_time:
+                    type: string
+                title: Parsed JSON
+              name: JSON Parser Parse
+          - set-variable:
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      model_id:
+                        type: string
+                      parameters:
+                        type: object
+                        properties:
+                          decoding_method:
+                            type: string
+                          stop_sequences:
+                            type: array
+                            items:
+                              type: string
+                          include_stop_sequence:
+                            type: boolean
+                          min_new_tokens:
+                            type: number
+                          max_new_tokens:
+                            type: string
+                      prompt_id:
+                        type: string
+                      data:
+                        type: object
+                        properties:
+                          input:
+                            type: string
+                          instruction:
+                            type: string
+                          input_prefix:
+                            type: string
+                          output_prefix:
+                            type: string
+                          examples:
+                            type: array
+                            items:
+                              type: string
+                      moderations:
+                        type: object
+                        properties: {}
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - data:
+                            mappings:
+                              - input:
+                                  template: '{{$JSONParserParse.case_description}}'
+                              - input_prefix:
+                                  template: 'Input:'
+                              - instruction:
+                                  template: Classify this review as positive or negative
+                              - output_prefix:
+                                  template: 'Output:'
+                        - model_id:
+                            template: ibm/granite-13b-instruct-v2
+                        - parameters:
+                            mappings:
+                              - decoding_method:
+                                  template: greedy
+                              - include_stop_sequence:
+                                  expression: 'false'
+                              - max_new_tokens:
+                                  template: '200'
+                              - min_new_tokens:
+                                  expression: '1'
+                              - stop_sequences:
+                                  expression: '["<|endoftext|>"]'
+                        - prompt_id:
+                            template: prompt_builder
+              name: Set variable
+          - custom-action:
+              action: INVOKE
+              name: HTTP Invoke method
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              map:
+                customSchemas:
+                  properties.`requestHeaders`:
+                    type: object
+                    properties:
+                      Content-Type:
+                        type: string
+                mappings:
+                  - method:
+                      template: POST
+                  - requestBody:
+                      template: '{{$Setvariable.variable}}'
+                  - requestHeaders:
+                      mappings:
+                        - Content-Type:
+                            template: ' application/json'
+                  - url:
+                      template: >-
+                        https://bam-api.res.ibm.com/v2/text/generation?version=2024-06-12
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - parse:
+              parse-format: json
+              source:
+                template: '{{$HTTPInvokemethod.responseBody}}'
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              sample-data: >-
+                {"id":"b09ab8f0-583a-4992-9992-bff6457394f8","model_id":"ibm/granite-13b-instruct-v2","created_at":"2024-06-12T06:11:22.525Z","results":[{"generated_text":"Negative","generated_token_count":2,"input_token_count":26,"stop_reason":"eos_token"}]}
+              output-schema:
+                $schema: http://json-schema.org/draft-04/schema#
+                type: object
+                properties:
+                  id:
+                    type: string
+                  model_id:
+                    type: string
+                  created_at:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        generated_text:
+                          type: string
+                        generated_token_count:
+                          type: number
+                        input_token_count:
+                          type: number
+                        stop_reason:
+                          type: string
+                title: Parsed JSON
+              name: JSON Parser Parse 2
+          - set-variable:
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      company:
+                        type: string
+                      severity:
+                        type: string
+                      services:
+                        type: string
+                      case_description:
+                        type: string
+                      case_time:
+                        type: string
+                        format: date-time
+                      sentiment:
+                        type: string
+                      event_id:
+                        type: string
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - case_description:
+                            template: '{{$JSONParserParse.case_description}}'
+                        - case_time:
+                            template: '{{$JSONParserParse.case_time}}'
+                        - company:
+                            template: '{{$JSONParserParse.company}}'
+                        - email:
+                            template: '{{$JSONParserParse.email}}'
+                        - event_id:
+                            template: '{{$Trigger.eventId}}'
+                        - name:
+                            template: '{{$JSONParserParse.name}}'
+                        - sentiment:
+                            template: '{{$JSONParserParse2.results[0].generated_text}}'
+                        - services:
+                            template: '{{$JSONParserParse.services}}'
+                        - severity:
+                            template: '{{$JSONParserParse.severity}}'
+              name: Set variable 2
+          - create-action:
+              name: Kafka Send message
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              map:
+                mappings:
+                  - Payload:
+                      template: '{{$Setvariable2.variable}}'
+                  - Topic:
+                      template: Customer.Feedback.Sentiment.V1
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+  name: Sentiment-Classifier
+models: {}
