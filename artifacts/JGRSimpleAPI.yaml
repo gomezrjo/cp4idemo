@@ -1,0 +1,115 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        retrieveWidget:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: retrieveWidget
+          output-context:
+            data: retrieveWidget
+      options:
+        resources:
+          - business-object: widget
+            triggers:
+              retrieve: retrieveWidget
+            model:
+              $ref: '#/models/widget'
+      type: api-trigger
+  action-interfaces: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - set-variable:
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas: {}
+                input:
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                mappings: []
+              name: Set variable
+          - response:
+              name: response
+              reply-maps:
+                - title: widget successfully retrieved
+                  status-code: 200
+                  map:
+                    mappings:
+                      - color:
+                          template: Blue
+                      - description:
+                          template: >-
+                            Designer Authoring Tool powered by App Connect on
+                            CP4I
+                      - id:
+                          template: '{{$api.id}}'
+                      - name:
+                          template: Designer
+                      - quantity:
+                          expression: '100'
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                      - variable: api
+                        $ref: '#/trigger/api/parameters'
+  name: JGRSimpleAPI
+models:
+  widget:
+    name: widget
+    plural: widget
+    properties:
+      id:
+        required: false
+        id: true
+        type: string
+      name:
+        required: false
+        id: false
+        type: string
+      description:
+        required: false
+        id: false
+        type: string
+      quantity:
+        required: false
+        id: false
+        type: number
+      color:
+        required: false
+        id: false
+        type: string
+    operations:
+      retrieve: '#/integration/assemblies/assembly-1'
+    description: ''
+x-ibm-configuration:
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          title: Invoke flow
+          version: 2.0.0
+          verb: keep
+          target-url: $(app-connect-designer-url)$(request.path)
+          follow-redirects: false
+          timeout: 60
+          parameter-control:
+            type: blocklist
+          header-control:
+            type: blocklist
+          inject-proxy-headers: true
+          username: $(app-connect-designer-username)
+          password: $(app-connect-designer-password)
