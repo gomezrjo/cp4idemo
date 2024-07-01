@@ -1,0 +1,278 @@
+{
+  "pipelineState": {
+    "doc_type": "pipeline",
+    "version": "3.0",
+    "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+    "id": "47a10143-1e70-4a4e-b446-6b681eab2ca6",
+    "primary_pipeline": "b10d861c-95e8-4c7b-be42-ebb1b8b0cf70",
+    "pipelines": [
+      {
+        "id": "b10d861c-95e8-4c7b-be42-ebb1b8b0cf70",
+        "nodes": [
+          {
+            "id": "dffb3a89-38fa-499b-abdf-339888c8bcf6",
+            "type": "source",
+            "app_data": {
+              "node_type": "source",
+              "ui_data": {
+                "label": "Orders",
+                "image": "/images/svg/source.svg",
+                "x_pos": 50,
+                "y_pos": 50
+              }
+            },
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "7e555428-5cab-489f-93f3-73dd2bc8dff8",
+            "type": "filter",
+            "app_data": {
+              "node_type": "filter",
+              "ui_data": {
+                "label": "Order from NA",
+                "image": "/images/svg/filter.svg",
+                "x_pos": 418,
+                "y_pos": 50
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "6d52aa2a-72e0-4293-96c8-4c93791c3bcd",
+                    "node_id_ref": "dffb3a89-38fa-499b-abdf-339888c8bcf6",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "45fa3510-6f53-4252-b750-31e7f6718889",
+            "type": "sink",
+            "app_data": {
+              "node_type": "sink",
+              "ui_data": {
+                "label": "Output Topic",
+                "image": "/images/svg/sink.svg",
+                "x_pos": 786,
+                "y_pos": 50
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "ac79e2c8-dcdd-41c5-85f9-2776a0abc105",
+                    "node_id_ref": "7e555428-5cab-489f-93f3-73dd2bc8dff8",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "app_data": {
+          "ui_data": {
+            "comments": []
+          }
+        },
+        "runtime_ref": ""
+      }
+    ],
+    "schemas": []
+  },
+  "contextState": {
+    "edges": [
+      {
+        "incoming": "dffb3a89-38fa-499b-abdf-339888c8bcf6",
+        "outgoing": "7e555428-5cab-489f-93f3-73dd2bc8dff8"
+      },
+      {
+        "incoming": "7e555428-5cab-489f-93f3-73dd2bc8dff8",
+        "outgoing": "45fa3510-6f53-4252-b750-31e7f6718889"
+      }
+    ],
+    "nodes": [
+      {
+        "viewName": "Orders",
+        "nodeId": "dffb3a89-38fa-499b-abdf-339888c8bcf6",
+        "nodeType": "source",
+        "configuration": {
+          "bootstrapServers": [
+            "eem-demo-gw-ibm-egw-rt-14-tools.apps.6681cdbed48110001ea4afbf.cloud.techzone.ibm.com:443"
+          ],
+          "securityProtocol": "SASL_SSL",
+          "topic": "ORDERS",
+          "fields": [
+            {
+              "name": "id",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "customer",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "customerid",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "description",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "price",
+              "selected": true,
+              "type": "DOUBLE",
+              "nullable": false,
+              "avroType": "DOUBLE"
+            },
+            {
+              "name": "quantity",
+              "selected": true,
+              "type": "BIGINT",
+              "nullable": false,
+              "avroType": "BIGINT"
+            },
+            {
+              "name": "region",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "ordertime",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            }
+          ],
+          "watermark": {
+            "watermarkWithEventSource": true,
+            "topicLocalTimeRequired": true,
+            "watermarkColumn": "event_time",
+            "interval": 1,
+            "timeUnit": "MINUTE"
+          },
+          "configureNewSource": false,
+          "topicIdForReuse": "540c37a0-24ec-4dde-8d85-c5598a97d911",
+          "persistSourceTopic": true,
+          "isSourceEditable": true,
+          "format": "avro",
+          "type": "SASL",
+          "truststoreCertificates": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIK6jCCCdKgAwIBAgIRAI/i2NQDLgQ6kYBFagzbKZ0wDQYJKoZIhvcNAQELBQAwUDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQxJjAkBgNVBAMTHUlCTSBFdmVudCBFbmRwb2ludCBNYW5hZ2VtZW50MB4XDTI0MDcwMTAyMjA1NloXDTI0MDkyOTAyMjA1NlowKDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDcjjmBf7qUYJcAjL+Gc1dEvLqg9SEfLYaNPPG6PRwl29BQGuuiUMBLirN4ArU/BdtUtjOH0o/Upxm0EbkoLhrIR1sOPRtdZFIK0VUynUhonEXvxujygrDURzoz4CkVWsJky7uciSxVHize17io4NKV7VsgvxgimzMpsPZ+JAIZlbUm80ErX6VnzI44qpe0KRIgkM8sKV6nCa7YcbFYqTcNb8lo2LSUeC4vqGWwJkPHI5Th/rYSvwMS5zK+M2US7IHJF6CMGD1AKCaAhJKrZDGu3KUuCa5GYPBpwVC5CaRs0ZbNHKAJ+eenP+OKvbWptDN6PivTsLDIPRXBh1nYvHlxAgMBAAGjggflMIIH4TAOBgNVHQ8BAf8EBAMCB4AwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjVIlCJolLLyOB9jLnSvMENsjvV8wggd/BgNVHREEggd2MIIHcoIdZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHOCIWVlbS1kZW1vLWd3LWlibS1lZ3ctc3ZjLnRvb2xzLnN2Y4IvZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHMuc3ZjLmNsdXN0ZXIubG9jYWyCUWVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMi10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTE5LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC04LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTYtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJRZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTItdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC05LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC02LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTExLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xOC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEwLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb20wDQYJKoZIhvcNAQELBQADggEBAEuC3pyeUC4d9dSBeFAmXi/u+P9t8rj1djsnFvj/tqG7KkBf73E7hcgar+fGyrJY217Pfc6qrlhxg6W7jSe7pau3ZiUZsIa80tyUrLfy0gvgCVAmgnhrcoUCyUXqlWQb8PhHoBanT6lpUaQdn1UCeFoHJiMm0+XCYLlCUHz9WqAkpr7akd5EyP+6zVPYuAmWxoaG/gDQPWSgcULszOkA+jxNuSh5/O0F2k2j69DoyT1Zf17BzQhg9wVI3Ngcx6+cdGjWK8S4JunnFhNCznueqp+W+m0nljz/JXL8IiZgnE5S0UOVHZAVSPcoq5vwtEagt/n+3V9srFDP9edv27JrrIs=\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "username": "eem-3de77b82-994f-4ebb-b9b8-126ed7ab4de7",
+          "password": "3f499609-e02d-41fd-97ce-f058c8a54b7c",
+          "mechanism": "PLAIN",
+          "hasSourcePersisted": true,
+          "certificatesAccepted": false,
+          "topicPayload": "{\n  \"namespace\": \"com.loosehangerjeans\",\n  \"type\": \"record\",\n  \"name\": \"Order\",\n  \"fields\": [\n    {\n      \"name\": \"id\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"order id\"\n    },\n    {\n      \"name\": \"customer\",\n      \"type\": \"string\",\n      \"doc\": \"Name of the customer who made the order\"\n    },\n    {\n      \"name\": \"customerid\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"unique id for the customer who made the order\"\n    },\n    {\n      \"name\": \"description\",\n      \"type\": \"string\",\n      \"doc\": \"Description of the product that was ordered\"\n    },\n    {\n      \"name\": \"price\",\n      \"type\": \"double\",\n      \"doc\": \"Unit price of an individual item at the time of the order\"\n    },\n    {\n      \"name\": \"quantity\",\n      \"type\": \"long\",\n      \"doc\": \"Number of the items that was purchased in the order\"\n    },\n    {\n      \"name\": \"region\",\n      \"type\": \"string\",\n      \"doc\": \"which region the order was made in - will be one of NA, SA, EMEA, APAC, ANZ\"\n    },\n    {\n      \"name\": \"ordertime\",\n      \"type\": \"string\",\n      \"doc\": \"time that the order was made\"\n    }\n  ]\n}"
+        }
+      },
+      {
+        "viewName": "Order from NA",
+        "nodeId": "7e555428-5cab-489f-93f3-73dd2bc8dff8",
+        "nodeType": "filter",
+        "configuration": {
+          "statement": "`region` = 'NA'"
+        }
+      },
+      {
+        "viewName": "Output Topic",
+        "nodeId": "45fa3510-6f53-4252-b750-31e7f6718889",
+        "nodeType": "sink",
+        "configuration": {
+          "topic": "ORDERS.NA",
+          "bootstrapServers": [
+            "es-demo-kafka-bootstrap.tools.svc:9095"
+          ],
+          "securityProtocol": "SASL_SSL",
+          "certificatesAccepted": false,
+          "type": "SASL",
+          "truststoreCertificates": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----\n"
+            },
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIFLTCCAxWgAwIBAgIUVZSSVIes/Np0qAIVapXlh+S2AkowDQYJKoZIhvcNAQENBQAwLTETMBEGA1UECgwKaW8uc3RyaW16aTEWMBQGA1UEAwwNY2x1c3Rlci1jYSB2MDAeFw0yNDA3MDEwMTM1NTRaFw0yNDA5MjkwMTM1NTRaMC0xEzARBgNVBAoMCmlvLnN0cmltemkxFjAUBgNVBAMMDWNsdXN0ZXItY2EgdjAwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCgRhEbSN6F7l+icLU80QYSRbNnYEoQ8MrBr6az3u2nYiFXe2Lpzp0UUMYAxjHIvvBajn5xNd+OZ/kUtYw4uITpXGS7cu7DuQGyKYVhXELNTW1GfPM/929Dis2+c3t6M1eIhRFq4py66fFkrmCf4cu3wLOb+v5HAwFR6K/n59E2UPy3F5h473sFJoNRtOiwda+qTWt0hWeGbyMKFwWOXrXu+LV7PNhPfnbCKWX/xOp9pEcOGCE6qCdvs1I9XsfqvW7U+iYsHL6PAllkd8CMHUPGMIBP61mOHPyXlNB4mKEWV4MZcOPJkdPflNa5ypD1ULhmQe5xoKXXDJ9TYedElYWHdlzZHwsyxu6jQmL4ufva5FoVKLBNn8kKUDbCR+FEHfbm9kpoEyoqMx79oIxg2e48L5ipI6FdZPJBoTwy9b/xDXVBKR168AZAu7hArgwNzlU0Tds3o2B8hKXY4w9Nsa6rLzJnimvlHrrVvvSEtOLmnVySPLFa/TBtJTfNopDNXhvucPdAT4tPS7YdNUvCDBT/IHnsrW5QvX8RXdtnCjGlxnCr7fyGjMbYCHmK7DgtSU3iLW02i8H2Fqs+qUGsBBa01ULLzlB0JbSa14CPPdXQox3f0F+rmNf5RXCCb+iUbEBIG4gMtKrFvLOontwSDS4EBkgi1TrhYEww67sIN6zcSQIDAQABo0UwQzAdBgNVHQ4EFgQU1vGIi+RU7NZxds/jPLGDj0Vi5SEwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQENBQADggIBAI2NkcZgH1LqnBuQGzR3YvRjlpmBjix46W6jk5vl61rLMIC49LDczSftSuWxcg+CRBpcM2R1hgVedM7s9B+r+KUvMUqaMmspxlGaajaNmlapb4nmmW+n4S19V4+5324Bn1iYCZpnjIBlWyDm4iZXbYbGYaQUVOV09DfN1D8m/MjGZzv3VAh4ZRS847deRaVEG7dVLoJUf3hsuwxwCCLOm0fqb97/klQLUisZukQNZIY5VgwvM8GLqh1BL48CjoCLFzByBizh4R8ghAYeatEdCn9ceHablNwMwrJTjHDAnk4RiW7z5SQ3Cc1oonenpVAk24xnGabfgtjgOX40D8ONttk/P6CMR54HxMHW8iwWrG2Gb9bbj3/yTQ45IwLSLpm9JOJya++4h/cxvoxctwv+2G26Vrv/HpeQJmhM+KjgHJv54ZhCaVq+zQRBeLXDbAl1iiMlK3qr0ZDpldYALAdpbxyn/qBcmJEjwyqk2k3RepmuX/DcIgKKBLkHAdHvrJSlH3ImmTC+wVu+NIm/unNfSOXs7Kweprt/0dXLCX5sZRw5eUYCjdBlEJWdn4CNdNSX5uhKApAucMi5eCbBM3xU0sGh0Kd5HAaRkUbYvR430BWbRqVhp2b1yrgTQJj3nCdufqA0VBUcnAaJ7NJbOhcZQR+ivKdzSfaOo9ieZMb3i+Sk\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "mechanism": "SCRAM-SHA-512",
+          "username": "ep-user",
+          "password": "BETOEjMegyD8VsxLJA9XhZ5NK7xi6GXV"
+        }
+      }
+    ]
+  },
+  "flowDetails": {
+    "flowName": "JGR Flow 05",
+    "flowDescription": "Automate actions based on event triggers",
+    "flowVersion": 5
+  }
+}
