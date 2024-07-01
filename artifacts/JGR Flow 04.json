@@ -1,0 +1,595 @@
+{
+  "pipelineState": {
+    "doc_type": "pipeline",
+    "version": "3.0",
+    "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+    "id": "ebff981d-96b0-4246-8021-e967ec75ec30",
+    "primary_pipeline": "5f16122c-a918-4b85-a4ad-91523877dd0a",
+    "pipelines": [
+      {
+        "id": "5f16122c-a918-4b85-a4ad-91523877dd0a",
+        "nodes": [
+          {
+            "id": "77c0fbb9-dbe4-49fa-83fc-1510b4c83335",
+            "type": "source",
+            "app_data": {
+              "node_type": "source",
+              "ui_data": {
+                "label": "Orders",
+                "image": "/images/svg/source.svg",
+                "x_pos": 23,
+                "y_pos": 49
+              }
+            },
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "a9389fa5-c0af-492e-a16e-569a3d3f86fb",
+            "type": "filter",
+            "app_data": {
+              "node_type": "filter",
+              "ui_data": {
+                "label": "Large Orders",
+                "image": "/images/svg/filter.svg",
+                "x_pos": 276,
+                "y_pos": 137
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "32eeb79b-705b-4ad2-9df1-f7c11986c614",
+                    "node_id_ref": "77c0fbb9-dbe4-49fa-83fc-1510b4c83335",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "2842ff7b-c3fc-45c6-aaae-8510cae1b34c",
+            "type": "source",
+            "app_data": {
+              "node_type": "source",
+              "ui_data": {
+                "label": "Cancellations",
+                "image": "/images/svg/source.svg",
+                "x_pos": 25,
+                "y_pos": 227
+              }
+            },
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "ef39c0ac-78b7-4d90-9f07-2efc16d86e12",
+            "type": "intervalJoin",
+            "app_data": {
+              "node_type": "intervalJoin",
+              "ui_data": {
+                "label": "Cancelled Large Orders",
+                "image": "/images/svg/intervalJoin.svg",
+                "x_pos": 430,
+                "y_pos": 305
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 2
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "00c2c8da-dbe0-4f07-b2a7-79e06561320a",
+                    "node_id_ref": "a9389fa5-c0af-492e-a16e-569a3d3f86fb",
+                    "port_id_ref": "outPort"
+                  },
+                  {
+                    "id": "293a37cb-20ea-4806-a3b5-0d4d6d3044c7",
+                    "node_id_ref": "2842ff7b-c3fc-45c6-aaae-8510cae1b34c",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "f5660645-8204-4000-9420-119b74586767",
+            "type": "filter",
+            "app_data": {
+              "node_type": "filter",
+              "ui_data": {
+                "label": "Small Orders",
+                "image": "/images/svg/filter.svg",
+                "x_pos": 254,
+                "y_pos": -33
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "f0815631-85e7-41e5-a895-f6ad2af05c4e",
+                    "node_id_ref": "77c0fbb9-dbe4-49fa-83fc-1510b4c83335",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "6093e2c6-0e2f-4302-8b2d-af8faa224c45",
+            "type": "intervalJoin",
+            "app_data": {
+              "node_type": "intervalJoin",
+              "ui_data": {
+                "label": "Suspicious Orders",
+                "image": "/images/svg/intervalJoin.svg",
+                "x_pos": 667,
+                "y_pos": 50
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 2
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "45f33316-1fa5-421c-9ead-c47cf2c26083",
+                    "node_id_ref": "f5660645-8204-4000-9420-119b74586767",
+                    "port_id_ref": "outPort"
+                  },
+                  {
+                    "id": "24303dda-0b25-42fb-a280-35bae75104b5",
+                    "node_id_ref": "ef39c0ac-78b7-4d90-9f07-2efc16d86e12",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "app_data": {
+          "ui_data": {
+            "comments": []
+          }
+        },
+        "runtime_ref": ""
+      }
+    ],
+    "schemas": []
+  },
+  "contextState": {
+    "edges": [
+      {
+        "incoming": "77c0fbb9-dbe4-49fa-83fc-1510b4c83335",
+        "outgoing": "a9389fa5-c0af-492e-a16e-569a3d3f86fb"
+      },
+      {
+        "incoming": "a9389fa5-c0af-492e-a16e-569a3d3f86fb",
+        "outgoing": "ef39c0ac-78b7-4d90-9f07-2efc16d86e12"
+      },
+      {
+        "incoming": "2842ff7b-c3fc-45c6-aaae-8510cae1b34c",
+        "outgoing": "ef39c0ac-78b7-4d90-9f07-2efc16d86e12"
+      },
+      {
+        "incoming": "77c0fbb9-dbe4-49fa-83fc-1510b4c83335",
+        "outgoing": "f5660645-8204-4000-9420-119b74586767"
+      },
+      {
+        "incoming": "f5660645-8204-4000-9420-119b74586767",
+        "outgoing": "6093e2c6-0e2f-4302-8b2d-af8faa224c45"
+      },
+      {
+        "incoming": "ef39c0ac-78b7-4d90-9f07-2efc16d86e12",
+        "outgoing": "6093e2c6-0e2f-4302-8b2d-af8faa224c45"
+      }
+    ],
+    "nodes": [
+      {
+        "viewName": "Orders",
+        "nodeId": "77c0fbb9-dbe4-49fa-83fc-1510b4c83335",
+        "nodeType": "source",
+        "configuration": {
+          "bootstrapServers": [
+            "eem-demo-gw-ibm-egw-rt-14-tools.apps.6681cdbed48110001ea4afbf.cloud.techzone.ibm.com:443"
+          ],
+          "securityProtocol": "SASL_SSL",
+          "topic": "ORDERS",
+          "fields": [
+            {
+              "name": "id",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "customer",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "customerid",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "description",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "price",
+              "selected": true,
+              "type": "DOUBLE",
+              "nullable": false,
+              "avroType": "DOUBLE"
+            },
+            {
+              "name": "quantity",
+              "selected": true,
+              "type": "BIGINT",
+              "nullable": false,
+              "avroType": "BIGINT"
+            },
+            {
+              "name": "region",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "ordertime",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            }
+          ],
+          "watermark": {
+            "watermarkWithEventSource": true,
+            "topicLocalTimeRequired": true,
+            "watermarkColumn": "event_time",
+            "interval": 1,
+            "timeUnit": "MINUTE"
+          },
+          "configureNewSource": false,
+          "topicIdForReuse": "540c37a0-24ec-4dde-8d85-c5598a97d911",
+          "persistSourceTopic": true,
+          "isSourceEditable": true,
+          "format": "avro",
+          "type": "SASL",
+          "truststoreCertificates": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIK6jCCCdKgAwIBAgIRAI/i2NQDLgQ6kYBFagzbKZ0wDQYJKoZIhvcNAQELBQAwUDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQxJjAkBgNVBAMTHUlCTSBFdmVudCBFbmRwb2ludCBNYW5hZ2VtZW50MB4XDTI0MDcwMTAyMjA1NloXDTI0MDkyOTAyMjA1NlowKDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDcjjmBf7qUYJcAjL+Gc1dEvLqg9SEfLYaNPPG6PRwl29BQGuuiUMBLirN4ArU/BdtUtjOH0o/Upxm0EbkoLhrIR1sOPRtdZFIK0VUynUhonEXvxujygrDURzoz4CkVWsJky7uciSxVHize17io4NKV7VsgvxgimzMpsPZ+JAIZlbUm80ErX6VnzI44qpe0KRIgkM8sKV6nCa7YcbFYqTcNb8lo2LSUeC4vqGWwJkPHI5Th/rYSvwMS5zK+M2US7IHJF6CMGD1AKCaAhJKrZDGu3KUuCa5GYPBpwVC5CaRs0ZbNHKAJ+eenP+OKvbWptDN6PivTsLDIPRXBh1nYvHlxAgMBAAGjggflMIIH4TAOBgNVHQ8BAf8EBAMCB4AwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjVIlCJolLLyOB9jLnSvMENsjvV8wggd/BgNVHREEggd2MIIHcoIdZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHOCIWVlbS1kZW1vLWd3LWlibS1lZ3ctc3ZjLnRvb2xzLnN2Y4IvZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHMuc3ZjLmNsdXN0ZXIubG9jYWyCUWVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMi10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTE5LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC04LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTYtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJRZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTItdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC05LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC02LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTExLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xOC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEwLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb20wDQYJKoZIhvcNAQELBQADggEBAEuC3pyeUC4d9dSBeFAmXi/u+P9t8rj1djsnFvj/tqG7KkBf73E7hcgar+fGyrJY217Pfc6qrlhxg6W7jSe7pau3ZiUZsIa80tyUrLfy0gvgCVAmgnhrcoUCyUXqlWQb8PhHoBanT6lpUaQdn1UCeFoHJiMm0+XCYLlCUHz9WqAkpr7akd5EyP+6zVPYuAmWxoaG/gDQPWSgcULszOkA+jxNuSh5/O0F2k2j69DoyT1Zf17BzQhg9wVI3Ngcx6+cdGjWK8S4JunnFhNCznueqp+W+m0nljz/JXL8IiZgnE5S0UOVHZAVSPcoq5vwtEagt/n+3V9srFDP9edv27JrrIs=\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "username": "eem-3de77b82-994f-4ebb-b9b8-126ed7ab4de7",
+          "password": "3f499609-e02d-41fd-97ce-f058c8a54b7c",
+          "mechanism": "PLAIN",
+          "hasSourcePersisted": true,
+          "certificatesAccepted": false,
+          "topicPayload": "{\n  \"namespace\": \"com.loosehangerjeans\",\n  \"type\": \"record\",\n  \"name\": \"Order\",\n  \"fields\": [\n    {\n      \"name\": \"id\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"order id\"\n    },\n    {\n      \"name\": \"customer\",\n      \"type\": \"string\",\n      \"doc\": \"Name of the customer who made the order\"\n    },\n    {\n      \"name\": \"customerid\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"unique id for the customer who made the order\"\n    },\n    {\n      \"name\": \"description\",\n      \"type\": \"string\",\n      \"doc\": \"Description of the product that was ordered\"\n    },\n    {\n      \"name\": \"price\",\n      \"type\": \"double\",\n      \"doc\": \"Unit price of an individual item at the time of the order\"\n    },\n    {\n      \"name\": \"quantity\",\n      \"type\": \"long\",\n      \"doc\": \"Number of the items that was purchased in the order\"\n    },\n    {\n      \"name\": \"region\",\n      \"type\": \"string\",\n      \"doc\": \"which region the order was made in - will be one of NA, SA, EMEA, APAC, ANZ\"\n    },\n    {\n      \"name\": \"ordertime\",\n      \"type\": \"string\",\n      \"doc\": \"time that the order was made\"\n    }\n  ]\n}"
+        }
+      },
+      {
+        "viewName": "Large Orders",
+        "nodeId": "a9389fa5-c0af-492e-a16e-569a3d3f86fb",
+        "nodeType": "filter",
+        "configuration": {
+          "statement": "`quantity` > 5"
+        }
+      },
+      {
+        "viewName": "Cancellations",
+        "nodeId": "2842ff7b-c3fc-45c6-aaae-8510cae1b34c",
+        "nodeType": "source",
+        "configuration": {
+          "bootstrapServers": [
+            "eem-demo-gw-ibm-egw-rt-14-tools.apps.6681cdbed48110001ea4afbf.cloud.techzone.ibm.com:443"
+          ],
+          "securityProtocol": "SASL_SSL",
+          "topic": "CANCELS",
+          "fields": [
+            {
+              "name": "id",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "orderid",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "canceltime",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "reason",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            }
+          ],
+          "watermark": {
+            "watermarkWithEventSource": true,
+            "topicLocalTimeRequired": true,
+            "timeUnit": "MINUTE",
+            "interval": 1,
+            "watermarkColumn": "event_time"
+          },
+          "configureNewSource": true,
+          "topicIdForReuse": "configureNewSource",
+          "persistSourceTopic": true,
+          "isSourceEditable": true,
+          "format": "avro",
+          "certificatesAccepted": false,
+          "type": "SASL",
+          "truststoreCertificates": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIK6jCCCdKgAwIBAgIRAI/i2NQDLgQ6kYBFagzbKZ0wDQYJKoZIhvcNAQELBQAwUDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQxJjAkBgNVBAMTHUlCTSBFdmVudCBFbmRwb2ludCBNYW5hZ2VtZW50MB4XDTI0MDcwMTAyMjA1NloXDTI0MDkyOTAyMjA1NlowKDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDcjjmBf7qUYJcAjL+Gc1dEvLqg9SEfLYaNPPG6PRwl29BQGuuiUMBLirN4ArU/BdtUtjOH0o/Upxm0EbkoLhrIR1sOPRtdZFIK0VUynUhonEXvxujygrDURzoz4CkVWsJky7uciSxVHize17io4NKV7VsgvxgimzMpsPZ+JAIZlbUm80ErX6VnzI44qpe0KRIgkM8sKV6nCa7YcbFYqTcNb8lo2LSUeC4vqGWwJkPHI5Th/rYSvwMS5zK+M2US7IHJF6CMGD1AKCaAhJKrZDGu3KUuCa5GYPBpwVC5CaRs0ZbNHKAJ+eenP+OKvbWptDN6PivTsLDIPRXBh1nYvHlxAgMBAAGjggflMIIH4TAOBgNVHQ8BAf8EBAMCB4AwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjVIlCJolLLyOB9jLnSvMENsjvV8wggd/BgNVHREEggd2MIIHcoIdZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHOCIWVlbS1kZW1vLWd3LWlibS1lZ3ctc3ZjLnRvb2xzLnN2Y4IvZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHMuc3ZjLmNsdXN0ZXIubG9jYWyCUWVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMi10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTE5LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC04LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTYtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJRZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTItdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC05LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC02LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTExLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xOC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEwLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb20wDQYJKoZIhvcNAQELBQADggEBAEuC3pyeUC4d9dSBeFAmXi/u+P9t8rj1djsnFvj/tqG7KkBf73E7hcgar+fGyrJY217Pfc6qrlhxg6W7jSe7pau3ZiUZsIa80tyUrLfy0gvgCVAmgnhrcoUCyUXqlWQb8PhHoBanT6lpUaQdn1UCeFoHJiMm0+XCYLlCUHz9WqAkpr7akd5EyP+6zVPYuAmWxoaG/gDQPWSgcULszOkA+jxNuSh5/O0F2k2j69DoyT1Zf17BzQhg9wVI3Ngcx6+cdGjWK8S4JunnFhNCznueqp+W+m0nljz/JXL8IiZgnE5S0UOVHZAVSPcoq5vwtEagt/n+3V9srFDP9edv27JrrIs=\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "mechanism": "PLAIN",
+          "username": "eem-a3420349-a7e9-41c2-8790-8f6a3d7403c5",
+          "password": "44bd8fe7-5cfb-4f42-94fa-cad4f8d289df",
+          "topicPayload": "{\n  \"namespace\": \"com.loosehangerjeans\",\n  \"type\": \"record\",\n  \"name\": \"Cancellation\",\n  \"fields\": [\n    {\n      \"name\": \"id\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"id for the cancellation request\"\n    },\n    {\n      \"name\": \"orderid\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"id of the order that was cancelled\"\n    },\n    {\n      \"name\": \"canceltime\",\n      \"type\": \"string\",\n      \"doc\": \"time that the order was cancelled\"\n    },\n    {\n      \"name\": \"reason\",\n      \"type\": \"string\",\n      \"doc\": \"reason given for the cancellation\"\n    }\n  ]\n}",
+          "hasSourcePersisted": true
+        }
+      },
+      {
+        "viewName": "Cancelled Large Orders",
+        "nodeId": "ef39c0ac-78b7-4d90-9f07-2efc16d86e12",
+        "nodeType": "intervalJoin",
+        "configuration": {
+          "joinCondition": "`Large Orders`.`id` = `Cancellations`.`orderid`",
+          "timeCondition": {
+            "watchedTimeEvent": {
+              "table": "Cancellations",
+              "column": "event_time"
+            },
+            "baseTimeEvent": {
+              "table": "Large Orders",
+              "column": "event_time"
+            },
+            "start": {
+              "interval": 0,
+              "timeUnit": "MINUTE"
+            },
+            "end": {
+              "interval": 30,
+              "timeUnit": "MINUTE"
+            }
+          },
+          "columns": [
+            {
+              "outputColumn": "description",
+              "input": {
+                "column": "description",
+                "table": "Large Orders"
+              }
+            },
+            {
+              "outputColumn": "order time",
+              "input": {
+                "column": "event_time",
+                "table": "Large Orders"
+              }
+            },
+            {
+              "outputColumn": "cancel time",
+              "input": {
+                "column": "event_time",
+                "table": "Cancellations"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "viewName": "Small Orders",
+        "nodeId": "f5660645-8204-4000-9420-119b74586767",
+        "nodeType": "filter",
+        "configuration": {
+          "statement": "`quantity` <= 5"
+        }
+      },
+      {
+        "viewName": "Suspicious Orders",
+        "nodeId": "6093e2c6-0e2f-4302-8b2d-af8faa224c45",
+        "nodeType": "intervalJoin",
+        "configuration": {
+          "joinCondition": "`Small Orders`.`description` = `Cancelled Large Orders`.`description`",
+          "timeCondition": {
+            "watchedTimeEvent": {
+              "table": "Small Orders",
+              "column": "event_time"
+            },
+            "baseTimeEvent": {
+              "table": "Cancelled Large Orders",
+              "column": "order time"
+            },
+            "start": {
+              "interval": 0,
+              "timeUnit": "MINUTE"
+            },
+            "end": {
+              "interval": 30,
+              "timeUnit": "MINUTE"
+            }
+          },
+          "columns": [
+            {
+              "outputColumn": "order id",
+              "input": {
+                "column": "id",
+                "table": "Small Orders"
+              }
+            },
+            {
+              "outputColumn": "customer name",
+              "input": {
+                "column": "customer",
+                "table": "Small Orders"
+              }
+            },
+            {
+              "outputColumn": "product",
+              "input": {
+                "column": "description",
+                "table": "Small Orders"
+              }
+            },
+            {
+              "outputColumn": "small order time",
+              "input": {
+                "column": "event_time",
+                "table": "Small Orders"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "flowDetails": {
+    "flowName": "JGR Flow 04",
+    "flowDescription": "Join related events within time windows",
+    "flowVersion": 5
+  }
+}

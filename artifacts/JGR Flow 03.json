@@ -1,0 +1,397 @@
+{
+  "pipelineState": {
+    "doc_type": "pipeline",
+    "version": "3.0",
+    "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+    "id": "c3c5fdd0-9ef2-451d-be18-343c2f0821ba",
+    "primary_pipeline": "8e78cdf5-0d5f-4580-8b78-34ba9a8abfb1",
+    "pipelines": [
+      {
+        "id": "8e78cdf5-0d5f-4580-8b78-34ba9a8abfb1",
+        "nodes": [
+          {
+            "id": "28738696-68f8-4352-abe1-e7e139339693",
+            "type": "source",
+            "app_data": {
+              "node_type": "source",
+              "ui_data": {
+                "label": "Orders",
+                "image": "/images/svg/source.svg",
+                "x_pos": 50,
+                "y_pos": 50
+              }
+            },
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "aa8841db-9e4c-45c9-a051-2f0eb66121c8",
+            "type": "transform",
+            "app_data": {
+              "node_type": "transform",
+              "ui_data": {
+                "label": "Get Product Type",
+                "image": "/images/svg/transform.svg",
+                "x_pos": 418,
+                "y_pos": 50
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "71964310-67dd-4ab4-ae50-fb8470329dda",
+                    "node_id_ref": "28738696-68f8-4352-abe1-e7e139339693",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "c90afc83-cb13-4d81-8c8b-b3916e0338dd",
+            "type": "aggregate",
+            "app_data": {
+              "node_type": "aggregate",
+              "ui_data": {
+                "label": "Hourly Sales by Type",
+                "image": "/images/svg/aggregate.svg",
+                "x_pos": 786,
+                "y_pos": 50
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "0484cbaa-be9b-4e2f-892e-0219e19e34d9",
+                    "node_id_ref": "aa8841db-9e4c-45c9-a051-2f0eb66121c8",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "app_data": {
+          "ui_data": {
+            "comments": []
+          }
+        },
+        "runtime_ref": ""
+      }
+    ],
+    "schemas": []
+  },
+  "contextState": {
+    "edges": [
+      {
+        "incoming": "28738696-68f8-4352-abe1-e7e139339693",
+        "outgoing": "aa8841db-9e4c-45c9-a051-2f0eb66121c8"
+      },
+      {
+        "incoming": "aa8841db-9e4c-45c9-a051-2f0eb66121c8",
+        "outgoing": "c90afc83-cb13-4d81-8c8b-b3916e0338dd"
+      }
+    ],
+    "nodes": [
+      {
+        "viewName": "Orders",
+        "nodeId": "28738696-68f8-4352-abe1-e7e139339693",
+        "nodeType": "source",
+        "configuration": {
+          "bootstrapServers": [
+            "eem-demo-gw-ibm-egw-rt-14-tools.apps.6681cdbed48110001ea4afbf.cloud.techzone.ibm.com:443"
+          ],
+          "securityProtocol": "SASL_SSL",
+          "topic": "ORDERS",
+          "fields": [
+            {
+              "name": "id",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "customer",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "customerid",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "description",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "price",
+              "selected": true,
+              "type": "DOUBLE",
+              "nullable": false,
+              "avroType": "DOUBLE"
+            },
+            {
+              "name": "quantity",
+              "selected": true,
+              "type": "BIGINT",
+              "nullable": false,
+              "avroType": "BIGINT"
+            },
+            {
+              "name": "region",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            },
+            {
+              "name": "ordertime",
+              "selected": true,
+              "type": "STRING",
+              "nullable": false,
+              "avroType": "STRING"
+            }
+          ],
+          "watermark": {
+            "watermarkWithEventSource": true,
+            "topicLocalTimeRequired": true,
+            "watermarkColumn": "event_time",
+            "interval": 1,
+            "timeUnit": "MINUTE"
+          },
+          "configureNewSource": false,
+          "topicIdForReuse": "540c37a0-24ec-4dde-8d85-c5598a97d911",
+          "persistSourceTopic": true,
+          "isSourceEditable": true,
+          "format": "avro",
+          "type": "SASL",
+          "truststoreCertificates": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIK6jCCCdKgAwIBAgIRAI/i2NQDLgQ6kYBFagzbKZ0wDQYJKoZIhvcNAQELBQAwUDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQxJjAkBgNVBAMTHUlCTSBFdmVudCBFbmRwb2ludCBNYW5hZ2VtZW50MB4XDTI0MDcwMTAyMjA1NloXDTI0MDkyOTAyMjA1NlowKDEmMCQGA1UEChMdSUJNIEV2ZW50IEVuZHBvaW50IE1hbmFnZW1lbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDcjjmBf7qUYJcAjL+Gc1dEvLqg9SEfLYaNPPG6PRwl29BQGuuiUMBLirN4ArU/BdtUtjOH0o/Upxm0EbkoLhrIR1sOPRtdZFIK0VUynUhonEXvxujygrDURzoz4CkVWsJky7uciSxVHize17io4NKV7VsgvxgimzMpsPZ+JAIZlbUm80ErX6VnzI44qpe0KRIgkM8sKV6nCa7YcbFYqTcNb8lo2LSUeC4vqGWwJkPHI5Th/rYSvwMS5zK+M2US7IHJF6CMGD1AKCaAhJKrZDGu3KUuCa5GYPBpwVC5CaRs0ZbNHKAJ+eenP+OKvbWptDN6PivTsLDIPRXBh1nYvHlxAgMBAAGjggflMIIH4TAOBgNVHQ8BAf8EBAMCB4AwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUjVIlCJolLLyOB9jLnSvMENsjvV8wggd/BgNVHREEggd2MIIHcoIdZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHOCIWVlbS1kZW1vLWd3LWlibS1lZ3ctc3ZjLnRvb2xzLnN2Y4IvZWVtLWRlbW8tZ3ctaWJtLWVndy1zdmMudG9vbHMuc3ZjLmNsdXN0ZXIubG9jYWyCUWVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMi10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTE5LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTctdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC04LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTYtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJRZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTItdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC05LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CVGVlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMTUtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJTZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC02LXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtMy10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTExLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb22CU2VlbS1kZW1vLWd3LWlibS1lZ3ctcnQtNC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglNlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEtdG9vbHMuYXBwcy42NjgxY2RiZWQ0ODExMDAwMWVhNGFmYmYuY2xvdWQudGVjaHpvbmUuaWJtLmNvbYJUZWVtLWRlbW8tZ3ctaWJtLWVndy1ydC0xOC10b29scy5hcHBzLjY2ODFjZGJlZDQ4MTEwMDAxZWE0YWZiZi5jbG91ZC50ZWNoem9uZS5pYm0uY29tglRlZW0tZGVtby1ndy1pYm0tZWd3LXJ0LTEwLXRvb2xzLmFwcHMuNjY4MWNkYmVkNDgxMTAwMDFlYTRhZmJmLmNsb3VkLnRlY2h6b25lLmlibS5jb20wDQYJKoZIhvcNAQELBQADggEBAEuC3pyeUC4d9dSBeFAmXi/u+P9t8rj1djsnFvj/tqG7KkBf73E7hcgar+fGyrJY217Pfc6qrlhxg6W7jSe7pau3ZiUZsIa80tyUrLfy0gvgCVAmgnhrcoUCyUXqlWQb8PhHoBanT6lpUaQdn1UCeFoHJiMm0+XCYLlCUHz9WqAkpr7akd5EyP+6zVPYuAmWxoaG/gDQPWSgcULszOkA+jxNuSh5/O0F2k2j69DoyT1Zf17BzQhg9wVI3Ngcx6+cdGjWK8S4JunnFhNCznueqp+W+m0nljz/JXL8IiZgnE5S0UOVHZAVSPcoq5vwtEagt/n+3V9srFDP9edv27JrrIs=\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "username": "eem-3de77b82-994f-4ebb-b9b8-126ed7ab4de7",
+          "password": "3f499609-e02d-41fd-97ce-f058c8a54b7c",
+          "mechanism": "PLAIN",
+          "hasSourcePersisted": true,
+          "certificatesAccepted": false,
+          "topicPayload": "{\n  \"namespace\": \"com.loosehangerjeans\",\n  \"type\": \"record\",\n  \"name\": \"Order\",\n  \"fields\": [\n    {\n      \"name\": \"id\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"order id\"\n    },\n    {\n      \"name\": \"customer\",\n      \"type\": \"string\",\n      \"doc\": \"Name of the customer who made the order\"\n    },\n    {\n      \"name\": \"customerid\",\n      \"type\": \"string\",\n      \"logicalType\": \"uuid\",\n      \"doc\": \"unique id for the customer who made the order\"\n    },\n    {\n      \"name\": \"description\",\n      \"type\": \"string\",\n      \"doc\": \"Description of the product that was ordered\"\n    },\n    {\n      \"name\": \"price\",\n      \"type\": \"double\",\n      \"doc\": \"Unit price of an individual item at the time of the order\"\n    },\n    {\n      \"name\": \"quantity\",\n      \"type\": \"long\",\n      \"doc\": \"Number of the items that was purchased in the order\"\n    },\n    {\n      \"name\": \"region\",\n      \"type\": \"string\",\n      \"doc\": \"which region the order was made in - will be one of NA, SA, EMEA, APAC, ANZ\"\n    },\n    {\n      \"name\": \"ordertime\",\n      \"type\": \"string\",\n      \"doc\": \"time that the order was made\"\n    }\n  ]\n}"
+        }
+      },
+      {
+        "viewName": "Get Product Type",
+        "nodeId": "aa8841db-9e4c-45c9-a051-2f0eb66121c8",
+        "nodeType": "transform",
+        "configuration": {
+          "columns": [
+            {
+              "outputColumn": "id",
+              "input": {
+                "column": "id"
+              }
+            },
+            {
+              "outputColumn": "customer",
+              "input": {
+                "column": "customer"
+              }
+            },
+            {
+              "outputColumn": "customerid",
+              "input": {
+                "column": "customerid"
+              }
+            },
+            {
+              "outputColumn": "description",
+              "input": {
+                "column": "description"
+              }
+            },
+            {
+              "outputColumn": "price",
+              "input": {
+                "column": "price"
+              }
+            },
+            {
+              "outputColumn": "quantity",
+              "input": {
+                "column": "quantity"
+              }
+            },
+            {
+              "outputColumn": "region",
+              "input": {
+                "column": "region"
+              }
+            },
+            {
+              "outputColumn": "ordertime",
+              "input": {
+                "column": "ordertime"
+              }
+            },
+            {
+              "outputColumn": "event_time",
+              "input": {
+                "column": "event_time"
+              }
+            },
+            {
+              "outputColumn": "product type",
+              "input": {
+                "column": ""
+              },
+              "expression": "REGEXP_EXTRACT(`description`, '([A-Z]+) ([A-Za-z\\-]+) ([A-Za-z\\-]+) Jeans', 3)"
+            }
+          ]
+        }
+      },
+      {
+        "viewName": "Hourly Sales by Type",
+        "nodeId": "c90afc83-cb13-4d81-8c8b-b3916e0338dd",
+        "nodeType": "aggregate",
+        "configuration": {
+          "functions": [
+            {
+              "id": "SUM_quantity",
+              "name": "SUM",
+              "distinct": false,
+              "source": {
+                "column": "quantity"
+              }
+            }
+          ],
+          "groupBy": [
+            {
+              "column": "product type"
+            }
+          ],
+          "columns": [
+            {
+              "outputColumn": "total sales",
+              "input": {
+                "column": "SUM_quantity"
+              },
+              "kind": "AGGREGATE_RESULT",
+              "aggregateFunctionId": "SUM_quantity"
+            },
+            {
+              "outputColumn": "product type",
+              "input": {
+                "column": "product type"
+              },
+              "kind": "GROUP_BY"
+            },
+            {
+              "outputColumn": "start time",
+              "input": {
+                "column": "aggregateStartTime"
+              },
+              "kind": "WINDOW_START"
+            },
+            {
+              "outputColumn": "end time",
+              "input": {
+                "column": "aggregateEndTime"
+              },
+              "kind": "WINDOW_END"
+            },
+            {
+              "outputColumn": "result time",
+              "input": {
+                "column": "aggregateResultTime"
+              },
+              "kind": "WINDOW_TIME"
+            }
+          ],
+          "timeEvent": {
+            "table": "",
+            "column": "event_time"
+          },
+          "aggregationPeriod": {
+            "interval": 1,
+            "timeUnit": "MINUTE"
+          }
+        }
+      }
+    ]
+  },
+  "flowDetails": {
+    "flowName": "JGR Flow 03",
+    "flowDescription": "Aggregate events to detect trends over time ",
+    "flowVersion": 5
+  }
+}
