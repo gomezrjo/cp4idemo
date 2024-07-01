@@ -1,0 +1,163 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: watsonx.ai
+  x-ibm-name: watsonx.ai
+servers:
+  - url: /
+x-ibm-configuration:
+  properties:
+    target-url:
+      value: https://bam-api.res.ibm.com
+      description: The URL of the target service
+      encoded: false
+  cors:
+    enabled: true
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  assembly:
+    execute:
+      - set-variable:
+          version: 2.0.0
+          title: set up watson vars
+          actions:
+            - set: message.headers.Authorization
+              value: Bearer $(message.headers.apikey)
+              type: string
+      - parse:
+          version: 2.2.0
+          title: parse
+          parse-settings-reference:
+            default: apic-default-parsesettings
+          input: request
+          output: message
+      - invoke:
+          version: 2.3.0
+          title: invoke
+          backend-type: detect
+          header-control:
+            type: blocklist
+            values: []
+          parameter-control:
+            type: allowlist
+            values: []
+          http-version: HTTP/1.1
+          timeout: 60
+          verb: keep
+          chunked-uploads: true
+          persistent-connection: true
+          cache-response: protocol
+          cache-ttl: 900
+          stop-on-error: []
+          graphql-send-type: detect
+          websocket-upgrade: false
+          target-url: $(target-url)$(request.path)$(request.search)
+          tls-profile: tls-client-profile-catalog-default:1.0.0
+      - parse:
+          version: 2.2.0
+          title: parse
+          parse-settings-reference:
+            default: apic-default-parsesettings
+          input: message
+          output: message
+      - extract:
+          version: 2.0.0
+          title: extract
+          root: message.body
+          extracts:
+            - capture: $.results
+              transform: $[0].generated_text
+  activity-log:
+    enabled: true
+    success-content: activity
+    error-content: payload
+paths:
+  /v2/text/generation:
+    parameters:
+      - $ref: '#/components/parameters/apikey'
+      - name: version
+        in: query
+        required: true
+        schema:
+          type: string
+    post:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created_at:
+                    type: string
+                  model_id:
+                    type: string
+                  space_id:
+                    type: string
+                  model_version:
+                    type: string
+                  results:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model_id:
+                  type: string
+                parameters:
+                  type: object
+                  properties:
+                    decoding_method:
+                      type: string
+                    stop_sequences:
+                      type: array
+                      items:
+                        type: string
+                    include_stop_sequence:
+                      type: boolean
+                    min_new_tokens:
+                      type: number
+                    max_new_tokens:
+                      type: number
+                  example: >-
+                    {"decoding_method":"greedy","stop_sequences":["<|endoftext|>"],"include_stop_sequence":false,"min_new_tokens":1,"max_new_tokens":200}
+                moderations:
+                  type: object
+                prompt_id:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    input:
+                      type: string
+                    instruction:
+                      type: string
+                    input_prefix:
+                      type: string
+                    output_prefix:
+                      type: string
+                    examples:
+                      type: array
+                      items: {}
+                  example: >-
+                    {"input":"case_description","instruction":"Classify this
+                    review as positive or
+                    negative","input_prefix":"Input:","output_prefix":"Output:","examples":[]}
+              required:
+                - input
+                - model_id
+components:
+  parameters:
+    apikey:
+      schema:
+        type: string
+      name: apikey
+      in: header
+      required: true
+  securitySchemes: {}
