@@ -32,8 +32,14 @@ x-ibm-configuration:
           title: parse
           parse-settings-reference:
             default: apic-default-parsesettings
-          input: request
-          output: message
+      - gatewayscript:
+          version: 2.0.0
+          title: gatewayscript
+          source: |-
+            var apim = require('apim');
+            var json = apim.getvariable('message');
+            json.body.parameters.include_stop_sequence = false;
+            apim.setvariable('message.body', json.body);
       - invoke:
           version: 2.3.0
           title: invoke
@@ -52,17 +58,14 @@ x-ibm-configuration:
           cache-response: protocol
           cache-ttl: 900
           stop-on-error: []
-          graphql-send-type: detect
           websocket-upgrade: false
+          graphql-send-type: detect
           target-url: $(target-url)$(request.path)$(request.search)
-          tls-profile: tls-client-profile-catalog-default:1.0.0
       - parse:
           version: 2.2.0
           title: parse
           parse-settings-reference:
             default: apic-default-parsesettings
-          input: message
-          output: message
       - extract:
           version: 2.0.0
           title: extract
@@ -121,6 +124,7 @@ paths:
                         type: string
                     include_stop_sequence:
                       type: boolean
+                      default: false
                     min_new_tokens:
                       type: number
                     max_new_tokens:
