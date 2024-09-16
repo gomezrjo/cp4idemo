@@ -119,7 +119,7 @@ integration:
                   - Payload:
                       template: '{{$Setvariable2.variable}}'
                   - Topic:
-                      template: feedback
+                      template: customer-service-feedback
                 $map: http://ibm.com/appconnect/map/v1
                 input:
                   - variable: Trigger
