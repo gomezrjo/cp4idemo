@@ -1,0 +1,553 @@
+{
+  "pipelineState": {
+    "doc_type": "pipeline",
+    "version": "3.0",
+    "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+    "id": "fa685bdb-fb5e-4d4a-bd38-d4c4440fcbcb",
+    "primary_pipeline": "368e8c09-080d-4d17-b804-57d2271f006a",
+    "pipelines": [
+      {
+        "id": "368e8c09-080d-4d17-b804-57d2271f006a",
+        "nodes": [
+          {
+            "id": "18640f32-1b58-4c5c-a77b-8afc777d1b40",
+            "type": "source",
+            "app_data": {
+              "node_type": "source",
+              "ui_data": {
+                "label": "feedback",
+                "image": "/images/svg/source.svg",
+                "x_pos": 50,
+                "y_pos": 50
+              }
+            },
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "d3de0736-37b7-4daf-893c-f806ef2650a2",
+            "type": "api",
+            "app_data": {
+              "node_type": "api",
+              "ui_data": {
+                "label": "classify using ai (watsonx)",
+                "image": "/images/svg/api.svg",
+                "x_pos": 418,
+                "y_pos": 50
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "4a19cd79-c3a0-4443-be37-2bfeb54edf9c",
+                    "node_id_ref": "18640f32-1b58-4c5c-a77b-8afc777d1b40",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "3c78eaa6-d8a3-4369-a8a3-2f458b482a70",
+            "type": "filter",
+            "app_data": {
+              "node_type": "filter",
+              "ui_data": {
+                "label": "find negative feedback",
+                "image": "/images/svg/filter.svg",
+                "x_pos": 181,
+                "y_pos": 229
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "46c2098d-b76d-4bab-8c43-a3dab6c814cf",
+                    "node_id_ref": "d3de0736-37b7-4daf-893c-f806ef2650a2",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "ce89d30b-b6bc-441e-ab12-deb5834eaf14",
+            "type": "aggregate",
+            "app_data": {
+              "node_type": "aggregate",
+              "ui_data": {
+                "label": "count by service",
+                "image": "/images/svg/aggregate.svg",
+                "x_pos": 545,
+                "y_pos": 229
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "8667b666-897d-40a0-b969-fc90cb7325af",
+                    "node_id_ref": "3c78eaa6-d8a3-4369-a8a3-2f458b482a70",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "app_data": {
+          "ui_data": {
+            "comments": []
+          }
+        },
+        "runtime_ref": ""
+      }
+    ],
+    "schemas": []
+  },
+  "contextState": {
+    "edges": [
+      {
+        "incoming": "18640f32-1b58-4c5c-a77b-8afc777d1b40",
+        "outgoing": "d3de0736-37b7-4daf-893c-f806ef2650a2"
+      },
+      {
+        "incoming": "d3de0736-37b7-4daf-893c-f806ef2650a2",
+        "outgoing": "3c78eaa6-d8a3-4369-a8a3-2f458b482a70"
+      },
+      {
+        "incoming": "3c78eaa6-d8a3-4369-a8a3-2f458b482a70",
+        "outgoing": "ce89d30b-b6bc-441e-ab12-deb5834eaf14"
+      }
+    ],
+    "nodes": [
+      {
+        "viewName": "feedback",
+        "nodeId": "18640f32-1b58-4c5c-a77b-8afc777d1b40",
+        "nodeType": "source",
+        "configuration": {
+          "bootstrapServers": [
+            "es-demo-kafka-bootstrap.tools.svc:9095"
+          ],
+          "securityProtocol": "SASL_SSL",
+          "topic": "feedback",
+          "fields": [
+            {
+              "name": "comment",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "service",
+              "selected": true,
+              "type": "STRING",
+              "jsonType": "string",
+              "tsFormat": "NONE"
+            },
+            {
+              "name": "timestamp",
+              "selected": true,
+              "type": "TIMESTAMP_LTZ_UDF",
+              "jsonType": "string",
+              "tsFormat": "TIMESTAMP_LTZ_UDF"
+            }
+          ],
+          "watermark": {
+            "watermarkWithEventSource": true,
+            "topicLocalTimeRequired": true,
+            "timeUnit": "MINUTE",
+            "interval": 1,
+            "watermarkColumn": "event_time"
+          },
+          "configureNewSource": true,
+          "topicIdForReuse": "configureNewSource",
+          "persistSourceTopic": true,
+          "isSourceEditable": true,
+          "format": "json",
+          "certificatesAccepted": false,
+          "truststoreCertificates": [
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----\n"
+            },
+            {
+              "pem": "-----BEGIN CERTIFICATE-----\nMIIFLTCCAxWgAwIBAgIUS8yVK7tp4DNphVtDAVsugf3UhIIwDQYJKoZIhvcNAQENBQAwLTETMBEGA1UECgwKaW8uc3RyaW16aTEWMBQGA1UEAwwNY2x1c3Rlci1jYSB2MDAeFw0yNDA5MDkxODQwMTJaFw0yNDEyMDgxODQwMTJaMC0xEzARBgNVBAoMCmlvLnN0cmltemkxFjAUBgNVBAMMDWNsdXN0ZXItY2EgdjAwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDRuUIZdFxQS5ZxC/uHX7lLHRshklRzT8Fdan+jrEnMPZRToJcs6eipoU20g+PijysWXgLCg/fV80I+dTms2Lir0lc9PuppSzJLCShMpG724+Rp/54oE9huEIdR/OklZmYoBCGAoA0dKkZNYN1URn7U/kzA5K05Q4/PKLsDh30hpAnAz8+PUQmdyfHfe3lyvWLmnf1pcvEcvrQtsXr/YKAxoZspyi1Kp4mRU6t8FHxEs/i4bxAUc5eYrtvnIRuu0l29soM9H35rALJRZqe9JlYDqa3sMJ3Z3HAetPUKpnn66dUdAb1aXbN46vedpRadyFgt+hrrTMUtyFezippCDRicpNXPyXSrIBDtxns6x1vZuZ/qP8+7rf137PeemOp5Hq6yYcJ9voTYkgliaK+mrjW1DP6pY25NfTM6ytJpGpCyV4zto32uLuWDVzrhG1REdB6PVZE2nXwgpcRwuRGngd+jm3FXx2Ngg5Y67Gn8dmTiFxEFJTiD9t4Yjn+wn/oKdFq1Quc60eH8Ng70/irNJ5GwdKfDmQmIfNuVWGA3TJXk/H9s7WRb9FHpNXsfDnM6PZEDfO4CFBE1UVO2HgEUJO1Jwt7xiBcu9pU57Teit0rknwnkft4ZPfq3KnOgYkJauVK8wKPUOOa/n2bL7EGWDyODYWzsqI9cz/7VjbvHFIVqwwIDAQABo0UwQzAdBgNVHQ4EFgQUh40DVt4rfWGx8eqvBozRmSRCJ6AwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQENBQADggIBAGTwYYI4qju4jFZ/WU2EyUX4jf/XDUaoNGdSXbDajKRBHCs/HDqmzMCQUX7bP4MDW7r0df7+KrnpVlvZENZ3kcZfrNpKEdwuG4u1i3bcfkxY05z325lMFTamoMy9qQrNgfiDt1jLcp5bSgzbbviulDzbbQNVSL863QCMRomLbresRgh+zX7dVfKwioqybhsjlRabpMrX2FKCt2cQet0VPlXPLD/BJPbc+ftKtnCwOjE5drk9h9IbuT/G0QdZrM0+9awK6bSB+UWSxkI+/TOnhXmq+17swV5X1UmvJ3soC23UK2s0RuzfP1prnaNCurXBU/14GYC8U/HKO62Qki6EAG+KmCJqDMg80W7zkjVuJgvYLXIQ7tTYRQCYtlfZmW9C/eD1Ll4UO12c8VtAmxZtnGLe6c776uGka1McZSlu8dTXUd5JiCfGUpcSABUH5SWZ+XBS3kYfrv3pi2zur0uqQIwl4lyEeKgmBWjm22HFISpwhi3auZozuwaFpoj1svy9vLulZouwQ7i2e6BoaPKLQa1qGJW6n5TMt/4DRKPZmVWK+CMC1tW5gmtWYeyoUofLAi0BZyFsz0nWDnl14jZB8tGI2p5apWoy3fQp3SVAXlVb7CV39LQEklYueWHiNNzo1NZMoMnmFCq8WHqELQdHCfhZQZ9qgRXIKksgU8mCq02b\n-----END CERTIFICATE-----\n"
+            }
+          ],
+          "topicPayload": "{\n  \"comment\": \"The worst experience ever\",\n  \"service\": \"registration\",\n  \"timestamp\": \"2024-07-03T08:17:17.444Z\"\n}",
+          "hasSourcePersisted": true,
+          "credentials": {
+            "type": "SASL",
+            "data": {
+              "username": "ep-user",
+              "password": "O9KLRJQd6hLuXMLJtoNQ8NBIzr8lMeMh",
+              "mechanism": "SCRAM-SHA-512"
+            }
+          }
+        }
+      },
+      {
+        "viewName": "classify using ai (watsonx)",
+        "nodeId": "d3de0736-37b7-4daf-893c-f806ef2650a2",
+        "nodeType": "api",
+        "configuration": {
+          "info": {
+            "openapiVersion": "V30",
+            "apiVersion": "1.0.0",
+            "title": "watsonx.ai"
+          },
+          "servers": [
+            {
+              "url": "https://apim-demo-gw-gateway-tools.apps.66df15f3fb7b182bd79c32ea.ocp.techzone.ibm.com/cp4i-demo-org/demo",
+              "variables": []
+            }
+          ],
+          "operations": [
+            {
+              "path": "/v2/text/generation",
+              "lookupMethod": "POST",
+              "requestBodyParameters": {
+                "required": true,
+                "parameters": [
+                  {
+                    "name": "model_id",
+                    "type": "string",
+                    "required": true,
+                    "input": {
+                      "kind": "literal",
+                      "value": "ibm/granite-13b-instruct-v2"
+                    }
+                  },
+                  {
+                    "name": "data/input",
+                    "type": "string",
+                    "required": false,
+                    "input": {
+                      "kind": "column",
+                      "value": "`comment`"
+                    }
+                  },
+                  {
+                    "name": "data/input_prefix",
+                    "type": "string",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "Input:"
+                    }
+                  },
+                  {
+                    "name": "data/instruction",
+                    "type": "string",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "Classify this review as positive or negative"
+                    }
+                  },
+                  {
+                    "name": "data/output_prefix",
+                    "type": "string",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "Output:"
+                    }
+                  },
+                  {
+                    "name": "prompt_id",
+                    "type": "string",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "prompt_builder"
+                    }
+                  },
+                  {
+                    "name": "parameters/decoding_method",
+                    "type": "string",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "greedy"
+                    }
+                  },
+                  {
+                    "name": "parameters/max_new_tokens",
+                    "type": "number",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "200"
+                    }
+                  },
+                  {
+                    "name": "parameters/include_stop_sequence",
+                    "type": "boolean",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "false"
+                    }
+                  },
+                  {
+                    "name": "parameters/min_new_tokens",
+                    "type": "number",
+                    "required": false,
+                    "input": {
+                      "kind": "literal",
+                      "value": "1"
+                    }
+                  }
+                ]
+              },
+              "requestParameters": [
+                {
+                  "name": "apikey",
+                  "in": "header",
+                  "type": "string",
+                  "required": true,
+                  "input": {
+                    "kind": "literal",
+                    "value": "add-your-own-BAM-key-here"
+                  }
+                },
+                {
+                  "name": "version",
+                  "in": "query",
+                  "type": "string",
+                  "required": true,
+                  "input": {
+                    "kind": "literal",
+                    "value": "2024-03-19"
+                  }
+                }
+              ],
+              "responseParameters": [
+                {
+                  "name": "model_version",
+                  "type": "string"
+                },
+                {
+                  "name": "created_at",
+                  "type": "string"
+                },
+                {
+                  "name": "model_id",
+                  "type": "string"
+                },
+                {
+                  "name": "space_id",
+                  "type": "string"
+                },
+                {
+                  "name": "results",
+                  "type": "string"
+                }
+              ],
+              "securityMethods": [
+                {
+                  "type": "none",
+                  "usedForApiEnrichment": true
+                }
+              ],
+              "usedForApiEnrichment": true
+            }
+          ],
+          "columns": [
+            {
+              "outputColumn": "comment",
+              "input": {
+                "column": "comment",
+                "table": "feedback"
+              }
+            },
+            {
+              "outputColumn": "service",
+              "input": {
+                "column": "service",
+                "table": "feedback"
+              }
+            },
+            {
+              "outputColumn": "timestamp",
+              "input": {
+                "column": "timestamp",
+                "table": "feedback"
+              }
+            },
+            {
+              "outputColumn": "event_time",
+              "input": {
+                "column": "event_time",
+                "table": "feedback"
+              }
+            },
+            {
+              "outputColumn": "response_results",
+              "input": {
+                "column": "response_results",
+                "table": "classify using ai (watsonx)_lookup__API"
+              }
+            }
+          ],
+          "configuredUrl": "https://apim-demo-gw-gateway-tools.apps.66df15f3fb7b182bd79c32ea.ocp.techzone.ibm.com/cp4i-demo-org/demo"
+        }
+      },
+      {
+        "viewName": "find negative feedback",
+        "nodeId": "3c78eaa6-d8a3-4369-a8a3-2f458b482a70",
+        "nodeType": "filter",
+        "configuration": {
+          "statement": "`response_results` = 'Negative'"
+        }
+      },
+      {
+        "viewName": "count by service",
+        "nodeId": "ce89d30b-b6bc-441e-ab12-deb5834eaf14",
+        "nodeType": "aggregate",
+        "configuration": {
+          "functions": [
+            {
+              "id": "COUNT_response_results",
+              "name": "COUNT",
+              "distinct": false,
+              "source": {
+                "column": "response_results"
+              }
+            }
+          ],
+          "groupBy": [
+            {
+              "column": "service"
+            }
+          ],
+          "columns": [
+            {
+              "outputColumn": "service",
+              "input": {
+                "column": "service"
+              },
+              "kind": "GROUP_BY"
+            },
+            {
+              "outputColumn": "count",
+              "input": {
+                "column": "COUNT_response_results"
+              },
+              "kind": "AGGREGATE_RESULT",
+              "aggregateFunctionId": "COUNT_response_results"
+            },
+            {
+              "outputColumn": "time",
+              "input": {
+                "column": "aggregateResultTime"
+              },
+              "kind": "WINDOW_TIME"
+            }
+          ],
+          "timeEvent": {
+            "table": "",
+            "column": "event_time"
+          },
+          "aggregationPeriod": {
+            "interval": 10,
+            "timeUnit": "MINUTE"
+          }
+        }
+      }
+    ]
+  },
+  "flowDetails": {
+    "flowName": "WatsonX Flow",
+    "flowDescription": "",
+    "flowVersion": 6
+  }
+}
