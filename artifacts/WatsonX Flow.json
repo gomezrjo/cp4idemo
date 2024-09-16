@@ -92,8 +92,8 @@
               "ui_data": {
                 "label": "find negative feedback",
                 "image": "/images/svg/filter.svg",
-                "x_pos": 181,
-                "y_pos": 229
+                "x_pos": 151,
+                "y_pos": 178
               }
             },
             "inputs": [
@@ -140,8 +140,8 @@
               "ui_data": {
                 "label": "count by service",
                 "image": "/images/svg/aggregate.svg",
-                "x_pos": 545,
-                "y_pos": 229
+                "x_pos": 539,
+                "y_pos": 178
               }
             },
             "inputs": [
@@ -160,6 +160,54 @@
                   {
                     "id": "8667b666-897d-40a0-b969-fc90cb7325af",
                     "node_id_ref": "3c78eaa6-d8a3-4369-a8a3-2f458b482a70",
+                    "port_id_ref": "outPort"
+                  }
+                ]
+              }
+            ],
+            "outputs": [
+              {
+                "id": "outPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": -1
+                    },
+                    "label": "Output Port"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "919f4e9b-e3cf-4a72-a614-6c3c18c8dca6",
+            "type": "filter",
+            "app_data": {
+              "node_type": "filter",
+              "ui_data": {
+                "label": "high number of complaints",
+                "image": "/images/svg/filter.svg",
+                "x_pos": 264,
+                "y_pos": 303
+              }
+            },
+            "inputs": [
+              {
+                "id": "inPort",
+                "app_data": {
+                  "ui_data": {
+                    "cardinality": {
+                      "min": 0,
+                      "max": 1
+                    },
+                    "label": "Input Port"
+                  }
+                },
+                "links": [
+                  {
+                    "id": "34c13cd6-700d-4b54-b3f2-7f9cadbeb826",
+                    "node_id_ref": "ce89d30b-b6bc-441e-ab12-deb5834eaf14",
                     "port_id_ref": "outPort"
                   }
                 ]
@@ -204,6 +252,10 @@
       {
         "incoming": "3c78eaa6-d8a3-4369-a8a3-2f458b482a70",
         "outgoing": "ce89d30b-b6bc-441e-ab12-deb5834eaf14"
+      },
+      {
+        "incoming": "ce89d30b-b6bc-441e-ab12-deb5834eaf14",
+        "outgoing": "919f4e9b-e3cf-4a72-a614-6c3c18c8dca6"
       }
     ],
     "nodes": [
@@ -518,7 +570,7 @@
               "kind": "GROUP_BY"
             },
             {
-              "outputColumn": "count",
+              "outputColumn": "number of complaints",
               "input": {
                 "column": "COUNT_response_results"
               },
@@ -526,7 +578,7 @@
               "aggregateFunctionId": "COUNT_response_results"
             },
             {
-              "outputColumn": "time",
+              "outputColumn": "processing time",
               "input": {
                 "column": "aggregateResultTime"
               },
@@ -541,6 +593,14 @@
             "interval": 10,
             "timeUnit": "MINUTE"
           }
+        }
+      },
+      {
+        "viewName": "high number of complaints",
+        "nodeId": "919f4e9b-e3cf-4a72-a614-6c3c18c8dca6",
+        "nodeType": "filter",
+        "configuration": {
+          "statement": "`number of complaints` >= 3"
         }
       }
     ]
