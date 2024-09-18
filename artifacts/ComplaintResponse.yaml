@@ -1,0 +1,213 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: trigger-action
+  trigger-interfaces:
+    trigger-interface-1:
+      type: event-trigger
+      connector-type: kafka
+      triggers:
+        CREATED:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: message
+          options:
+            Topic: service-at-risk
+            parentFilter:
+              Topic: service-at-risk
+            subscription:
+              clientId: ace-designer-ai
+      account-name: esdemo
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: request
+      connector-type: http
+      account-name: JGR BAM
+      actions:
+        INVOKE: {}
+    action-interface-2:
+      type: api-action
+      business-object: mail
+      connector-type: email
+      account-name: JGRMailTrapAcct
+      actions:
+        CREATEEMAIL: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - parse:
+              parse-format: json
+              source:
+                template: '{{$Trigger.Payload}}'
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              sample-data: |-
+                {
+                  "service": "wifi",
+                  "number of complaints": 5,
+                  "processing time": "2024-09-16 02:09:59.999"
+                }
+              output-schema:
+                $schema: http://json-schema.org/draft-04/schema#
+                type: object
+                properties:
+                  service:
+                    type: string
+                  number of complaints:
+                    type: number
+                  processing time:
+                    type: string
+                title: Parsed JSON
+              name: JSON Parser Parse
+          - custom-action:
+              name: HTTP Invoke method
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              action: INVOKE
+              map:
+                customSchemas:
+                  properties.`requestHeaders`:
+                    type: object
+                    properties:
+                      Content-Type:
+                        type: string
+                mappings:
+                  - continue2xx:
+                      expression: 'true'
+                  - method:
+                      template: POST
+                  - requestBody:
+                      template: |-
+                        {
+                          "model_id": "ibm/granite-13b-chat-v2",
+                          "parameters": {
+                            "decoding_method": "sample",
+                            "temperature": 0.7,
+                            "top_p": 0.85,
+                            "top_k": 50,
+                            "typical_p": 1,
+                            "repetition_penalty": 1.05,
+                            "min_new_tokens": 1,
+                            "max_new_tokens": 1024
+                          },
+                          "moderations": {},
+                          "input": "<|system|>\nYou are Granite Chat, an AI language model developed by IBM. You are a cautious assistant. You carefully follow instructions. You are helpful and harmless and you follow ethical guidelines and promote positive behavior.\n<|user|>\n Generate a response message, three to four sentences, that the company, ACME, can send to customers? I want a short response about negative feedback about the {{$JSONParserParse.service}} service. Use  a constructive approach,  express understanding and sympathy. Please do not make up any information that is not directly provided by me. \n<|assistant|>"
+                        }
+                  - requestHeaders:
+                      mappings:
+                        - Content-Type:
+                            template: application/json
+                  - url:
+                      template: >-
+                        https://bam-api.res.ibm.com/v2/text/generation?version=2024-03-19
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - parse:
+              parse-format: json
+              source:
+                template: '{{$HTTPInvokemethod.responseBody}}'
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              sample-data: >-
+                {"id":"cc5900bd-f6b5-4fe0-8ac5-bfd6ce22217d","model_id":"ibm/granite-13b-chat-v2","created_at":"2024-09-16T08:39:42.162Z","results":[{"generated_text":"\nThank
+                you for bringing the issue of our wifi services to our
+                attention. We sincerely apologize for any inconvenience this may
+                have caused you. We understand the importance of reliable
+                internet connectivity and are committed to providing the best
+                possible experience for our customers. Our IT team is already
+                looking into this matter and working diligently to resolve the
+                problem as soon as possible. In the meantime, we would be happy
+                to assist you with any alternative solutions or provide
+                information on any steps you can take to improve your current
+                situation. We value your patronage and appreciate your patience
+                as we work to improve our services.\n\nHere's the improved
+                version:\n\n\"We're sorry for the inconvenience you've
+                experienced with our wifi services. Our team is aware of the
+                problem and is actively working to fix it. In the meantime, we
+                can help you with alternative solutions or provide tips to
+                optimize your connection. Thank you for your understanding and
+                patience as we improve our
+                services.\"","generated_token_count":190,"input_token_count":109,"stop_reason":"eos_token","seed":306452920}]}
+              output-schema:
+                $schema: http://json-schema.org/draft-04/schema#
+                type: object
+                properties:
+                  id:
+                    type: string
+                  model_id:
+                    type: string
+                  created_at:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        generated_text:
+                          type: string
+                        generated_token_count:
+                          type: number
+                        input_token_count:
+                          type: number
+                        stop_reason:
+                          type: string
+                        seed:
+                          type: number
+                title: Parsed JSON
+              name: JSON Parser Parse 2
+          - custom-action:
+              name: Email Send email
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              action: CREATEEMAIL
+              map:
+                mappings:
+                  - attachmentForCreate:
+                      foreach:
+                        input: dummy
+                        iterator: attachmentForCreateItem
+                        mappings:
+                          - contentType:
+                              template: text/plain
+                  - emailBody:
+                      template: '{{$JSONParserParse2.results[0].generated_text}}'
+                  - subjectFilter:
+                      template: Suggested AI respose.
+                  - toFilter:
+                      template: joel.gomez@us.ibm.com
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+  name: ComplaintResponse
+models: {}
