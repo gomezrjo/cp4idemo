@@ -1,0 +1,137 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        createMessage:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: createMessage
+          output-context:
+            data: createMessage
+      options:
+        resources:
+          - business-object: message
+            triggers:
+              create: createMessage
+            model:
+              $ref: '#/models/message'
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: mail
+      connector-type: email
+      account-name: mailpit
+      actions:
+        CREATEEMAIL: {}
+      options:
+        connectorServiceOptions:
+          httpMethod: post
+          path: resources/mail/operations/CREATEEMAIL
+          action: custom
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - custom-action:
+              name: Email Send email
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              action: CREATEEMAIL
+              map:
+                mappings:
+                  - attachmentForCreate:
+                      foreach:
+                        mappings:
+                          - contentType:
+                              template: application/octet-stream
+                        input: dummy
+                        iterator: attachmentForCreateItem
+                  - emailBody:
+                      template: '{{$Request.body}}'
+                  - subjectFilter:
+                      template: '{{$Request.severity}} - {{$Request.subject}}'
+                  - toFilter:
+                      template: '{{$Request.email}}'
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+              filter: {}
+          - response:
+              name: response
+              reply-maps:
+                - title: message successfully created
+                  status-code: 201
+                  map:
+                    mappings:
+                      - body:
+                          template: '{{$EmailSendemail.messageId}}'
+                      - email:
+                          template: '{{$Request.email}}'
+                      - severity:
+                          expression: '$Request.severity '
+                      - subject:
+                          template: '{{$Request.subject}}'
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: EmailSendemail
+                        $ref: '#/node-output/Email Send email/response/payload'
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+  name: jgr-apic-engagement
+models:
+  message:
+    name: message
+    plural: message
+    properties:
+      email:
+        required: false
+        id: true
+        type: string
+      severity:
+        required: false
+        id: false
+        type: number
+      subject:
+        required: false
+        id: false
+        type: string
+      body:
+        required: false
+        id: false
+        type: string
+    operations:
+      create: '#/integration/assemblies/assembly-1'
+    description: ''
+x-ibm-configuration:
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          title: Invoke flow
+          version: 2.0.0
+          verb: keep
+          target-url: $(app-connect-designer-url)$(request.path)
+          follow-redirects: false
+          timeout: 60
+          parameter-control:
+            type: blocklist
+          header-control:
+            type: blocklist
+          inject-proxy-headers: true
+          username: $(app-connect-designer-username)
+          password: $(app-connect-designer-password)
